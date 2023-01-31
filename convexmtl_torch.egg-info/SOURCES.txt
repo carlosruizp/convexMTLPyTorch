@@ -1,0 +1,9 @@
+README.rst
+setup.py
+convexmtl_torch/__init__.py
+convexmtl_torch.egg-info/PKG-INFO
+convexmtl_torch.egg-info/SOURCES.txt
+convexmtl_torch.egg-info/dependency_links.txt
+convexmtl_torch.egg-info/not-zip-safe
+convexmtl_torch.egg-info/requires.txt
+convexmtl_torch.egg-info/top_level.txt

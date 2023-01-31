@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: convexmtl-torch
+Version: 0.1
+Summary: Package for Multiple Task Learning using sklearn guidelines
+Home-page: http://github.com/storborg/funniest
+Author: Carlos Ruiz Pastor
+Author-email: carlosruizpastor@protonmail.com
+License: MIT
+Platform: UNKNOWN
+
+Long description for convexmtl-pytorch
+

@@ -1,0 +1,2 @@
+This class has three methods: make_order, view_orders, and cancel_order. The __init__ method is called when a new instance of the class is created and it sets the client's name and orders. The make_order method adds a new order to the client's order list. The view_orders method prints out all of the client's current orders. The cancel_order method allows the client to cancel an order by removing it from the order list.
+
