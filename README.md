@@ -6,7 +6,7 @@ Implementation of ConvexMTL neural networks using PyTorch. -->
 It includes a PyTorch lightning module, called ConvexTorchCombinator, for multi-task learning with a convex combination of task-specific and common models. It is implemented using the PyTorch Lightning module.
 
 Mathematically, the model $h_r(\cdot)$ for each task can be defined as
-$$ h_r(x) = \lambda_r g(x) + (1-\lambda_r) g_r(x), $$
+$ h_r(x) = \lambda_r g(x) + (1-\lambda_r) g_r(x), $
 with $\lambda_r \in [0, 1]$. Here $g(\cdot)$ is a common module and $g_r(\cdot)$ a task-specific one. 
 
 With this implementation, any PyTorch modules can be combined to build multi-task models.
