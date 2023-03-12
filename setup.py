@@ -1,4 +1,6 @@
 from setuptools import setup
+from setuptools import find_namespace_packages
+
 
 def readme():
     with open('README.rst') as f:
@@ -12,7 +14,8 @@ setup(name='convexmtl-torch',
       author='Carlos Ruiz Pastor',
       author_email='carlosruizpastor@protonmail.com',
       license='MIT',
-      packages=['convexmtl_torch'],
+      # packages=['convexmtl_torch.model', 'convexmtl_torch.data'],
+      packages=find_namespace_packages(include=['convexmtl_torch.*']),
       install_requires=[
           'torch', 'numpy', 'pytorch-lightning'
       ],

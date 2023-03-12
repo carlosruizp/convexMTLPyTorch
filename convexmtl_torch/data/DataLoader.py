@@ -1,7 +1,5 @@
 from icecream import ic
-from mtlskl.data.dataLoader import load_datasets
-
-
+import convexmtl_torch.data.datasets as datasets
 class DataLoader:
     """
     A class for loading popular datasets from scikit-learn library.
@@ -25,21 +23,16 @@ class DataLoader:
         The description of the dataset
         
     """
-    def __init__(self, dataset_name='iris'):
-        self.dataset_name = dataset_name
-        self.data, self.target, self.inner_cv, self.outer_cv, self.task_info = self._load_dataset()
+    def __init__(self, data_dir=None):
+        self.data_dir = data_dir
         
-    def _load_dataset(self, task_type='predefined', nested_cv=False,
-                      seed=42, max_size=-1):
-        try:
-            X, y, inner_cv, outer_cv, task_info = load_datasets(self.dataset_name, task_type=task_type, 
-                                                                nested_cv=nested_cv, 
-                                                                seed=seed, max_size=max_size)
-        except ValueError as e:
-            raise e
-
-        return X, y, inner_cv, outer_cv, task_info
-
-# Example 
-# data_loader = DataLoader(dataset_name='boston')
-# X, y = data_loader.data, data_loader.target
+        
+    def load_dataset(self, dataset_name, **kwargs):
+        try: 
+            load_function = getattr(datasets, 'load_dataset_{}'.format(dataset_name))
+            df, target, outer_cv, inner_cv, task_info = load_function(data_dir=self.data_dir, **kwargs)
+        except AttributeError as e:
+            print(e)
+            # print(f"Invalid dataset_name: {dataset_name}.")
+            raise(AttributeError(f"Invalid dataset_name: {dataset_name}."))
+        return df, target, outer_cv, inner_cv, task_info

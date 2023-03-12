@@ -100,17 +100,19 @@ class ConvexMTLPytorchModel(BaseEstimator):
         X_task = X[:, task_col]
         X_task_map = np.array([self.map_dic[x] for x in X_task])
 
+
         if 'new_shape' in kwargs and kwargs['new_shape'] is not None:
-            ic(X_data.shape)
+            # ic(X_data.shape)
             new_shape = [X_data.shape[0]] + list(kwargs['new_shape'])
             X_data = np.reshape(X_data, tuple(new_shape))
-        else:
+        elif hasattr(self, 'new_shape'):
             if self.new_shape is not None:
                 new_shape = [n] + list(self.new_shape)
                 X_data = np.reshape(X_data, tuple(new_shape))
 
-        X_tensor_data = torch.tensor(X_data)
-        X_tensor_task = torch.tensor(X_task_map)
+        X_tensor_data, X_tensor_task = self.generate_tensors(X_data, X_task_map)
+        # X_tensor_data = torch.tensor(X_data)
+        # X_tensor_task = torch.tensor(X_task_map)
         pred_tensor = self.model(X_tensor_data, X_tensor_task)
         return pred_tensor
 
@@ -195,29 +197,8 @@ class ConvexMTLPytorchModel(BaseEstimator):
     #     return
 
     def get_opt_(self, **opt_kwargs):
-        # ic([(n, p) for n, p in self.model.named_parameters()])
-        param_list = torch.nn.ParameterList(
-                      [p for n, p in self.model.named_parameters() if p.requires_grad and "lamb" not in n])
-        # namedparam_list = [n for n, p in self.model.named_parameters() if p.requires_grad]
-        # ic(namedparam_list)
-        # namedparam_list = [n for n, p in self.model.named_parameters() if p.requires_grad and n != "lamb"]
-        if hasattr(self.model, 'specific_modules_'):
-            for name, module in self.model.specific_modules_.items():
-                param_list.extend(
-                    torch.nn.ParameterList(
-                        [p for n, p in module.named_parameters() if p.requires_grad])
-                )
-        if self.lambda_trainable:
-            if self.specific_lambda:
-                lambda_params = torch.nn.ParameterList( [v for k, v in self.model.lamb_dic.items()] )
-            else:
-                lambda_params = self.model.lamb
-
-            params = [{'params': param_list},
-                      {'params': lambda_params, 'lr': self.lambda_lr}]
-        else:
-            params = param_list
-
+        params = self.model.get_params()        
+        # ic(params)
         opt = optim.AdamW(params, **opt_kwargs)#, lr=self.learning_rate)
         
         return opt
@@ -340,6 +321,8 @@ class ConvexMTLPytorchModel(BaseEstimator):
     # @profile(output_file='train_numpy_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
     def _train_numpy(self, X_train, t_train, y_train, X_val, t_val, y_val):
 
+        # ic(self.model)
+        # ic(self.model.common_module_)
         best_tr = np.inf
         best_val = np.inf
         old_val_loss = np.inf
@@ -455,7 +438,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
                 for t, lamb_ in self.model.lamb_dic.items():
                     z = lamb_.detach().numpy()
                     z_sigmoid = 1/(1 + np.exp(-z))
-                    self.lambda_history_[t].append(z_sigmoid)
+                    self.lambda_history_[self.inv_map_dic[t]].append(z_sigmoid)
     
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
         """Fit the model to data matrix X and target(s) y.
@@ -494,13 +477,11 @@ class ConvexMTLPytorchModel(BaseEstimator):
             new_shape = [n] + list(self.new_shape)
             X_data = np.reshape(X_data, tuple(new_shape))
 
-        
-        
         self.map_dic = dict(zip(self.unique, range(len(self.unique))))
+        self.inv_map_dic =  {v: k for k, v in self.map_dic.items()}
         X_task_map = np.array([self.map_dic[x] for x in X_task])
 
 
-        ic(X_data.shape)
 
         #if not hasattr(self, 'model'):
         self.model = self.create_model(X_data, X_task, y)
@@ -543,13 +524,15 @@ class ConvexMTLPytorchModel(BaseEstimator):
                 self.val = True
         
         # Numpy Arrays to Pytorch Tensors
-        X_train, t_train, y_train = self.generate_tensors(X_train, t_train, y_train)
+        X_train, t_train = self.generate_tensors(X_train, t_train)
+        y_train = self.generate_tensors_target(y_train)
         # t_train = t_train.int()
         train_ds = TensorDataset(X_train, t_train, y_train)
         train_dl = DataLoader(train_ds, batch_size=self.batch_size, shuffle=True)
 
         if self.val:
-            X_val, t_val, y_val = self.generate_tensors(X_val, t_val, y_val)
+            X_val, t_val = self.generate_tensors(X_val, t_val)
+            y_val = self.generate_tensors_target(y_val)
             valid_ds = TensorDataset(X_val, t_val, y_val)
             valid_dl = DataLoader(valid_ds, batch_size=self.batch_size * 2)
 
@@ -596,7 +579,9 @@ class ConvexMTLPytorchModel(BaseEstimator):
         return self
 
     def _create_model(self, input_dim, n_output=1, n_channel=1, name=None, **model_kwargs):
-        tasks = self.map_dic.values()
+        tasks = list(self.map_dic.values())
+        # ic(list(self.map_dic.items()))
+        # ic(tasks)
         kwargs = {
             "lambda_trainable": self.lambda_trainable,
             "specific_lambda": self.specific_lambda,
@@ -612,14 +597,14 @@ class ConvexMTLPytorchModel(BaseEstimator):
                                       **model_kwargs)        
         return model
     
-    def generate_tensors(self, X, t, y):
+    def generate_tensors(self, *args):
         # if t.ndim == 1:
         #     t_2d = t[:, None]
         # else:
         #     t_2d = t
-        X, t, y = map(torch.tensor, (X, t, y))
+        tensor_args = map(lambda z: torch.tensor(z).float(), args)
         # t = t.int()
-        return X, t, y
+        return tensor_args
     
     def plot_history(self, val=True, ax=None, include_metrics=False, **kwargs):
         if ax is None:
@@ -765,19 +750,14 @@ class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
 
         proba = outputs.detach().numpy()
 
-        ic(proba.shape)
-
         return proba
 
     def score(self, X, y, sample_weight=None):
         pass
 
-    def generate_tensors(self, X, t, y):
-        X, t, y = map(torch.tensor, (X, t, y))
-        y = y.long()
-        # t = t.int()
-        return X, t, y
-
+    def generate_tensors_target(self, target):
+        tensor_target = torch.tensor(target).long()
+        return tensor_target
 
     def create_model(self, X_data, X_task, y, task_info=-1, name=None):
         self.task_info = task_info
@@ -853,5 +833,9 @@ class ConvexMTLPytorchRegressor(ConvexMTLPytorchModel):
         input_dim = m
         self.model = self._create_model(input_dim, n_output=1, name=name)
         return self.model
+    
+    def generate_tensors_target(self, target):
+        tensor_target = torch.tensor(target).float()
+        return tensor_target
 
                         

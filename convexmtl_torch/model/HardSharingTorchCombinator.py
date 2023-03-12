@@ -30,70 +30,70 @@ from typing import Union
 
 
 
-class HardSharingMTLNetwork(LightningModule):
-    def __init__(self, n_features, n_hidden=64, n_outputs=1, **kwargs):
-        super(HardSharingMTLNetwork, self).__init__()
-        # self.flatten = nn.Flatten()
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(n_features, n_hidden),
-            nn.ReLU(),
-            nn.Linear(n_hidden, n_hidden),
-            nn.ReLU(),
-            nn.Linear(n_hidden, n_hidden),
-            nn.ReLU(),
-        )
-        self.n_outputs = n_outputs
-        self.output_layers = {i: nn.Linear(n_hidden, 1).double() for i in range(n_outputs)}
-        # self.double()
+# class HardSharingMTLNetwork(LightningModule):
+#     def __init__(self, n_features, n_hidden=64, n_outputs=1, **kwargs):
+#         super(HardSharingMTLNetwork, self).__init__()
+#         # self.flatten = nn.Flatten()
+#         self.linear_relu_stack = nn.Sequential(
+#             nn.Linear(n_features, n_hidden),
+#             nn.ReLU(),
+#             nn.Linear(n_hidden, n_hidden),
+#             nn.ReLU(),
+#             nn.Linear(n_hidden, n_hidden),
+#             nn.ReLU(),
+#         )
+#         self.n_outputs = n_outputs
+#         self.output_layers = {i: nn.Linear(n_hidden, 1).double() for i in range(n_outputs)}
+#         # self.double()
 
-    def forward(self, x, t):
-        feat = self.linear_relu_stack(x)
-        # logits = torch.zeros((x.shape[0], 1), requires_grad=True)
-        logits = 0 * self.output_layers[0](feat)
-        for k, module in self.output_layers.items():
-            k_idx = (t==k)
-            logits_task = module(feat[k_idx])
-            logits[k_idx] = logits_task
-        # ic(x)
-        # ic(t)
-        # ic(logits)
-        # exit()
-        return logits
-
-
-
-class HardSharingConvNet(LightningModule):
-    # L1 ImgIn shape=(?, 28, 28, 1)
-    # Conv -> (?, 28, 28, 10)
-    def __init__(self, n_channels=1, n_outputs=1, **kwargs):
-        super(HardSharingConvNet, self).__init__()
-        self.conv1 = nn.Conv2d(n_channels, 10, kernel_size=5)
-        self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
-        self.conv2_drop = nn.Dropout2d()
-        self.fc1 = nn.Linear(320, 50)
-        # self.fc2 = nn.Linear(50, n_outputs)
-        self.n_outputs = n_outputs
-        self.output_layers = {i: nn.Linear(50, 1).double() for i in range(n_outputs)}
-
-        # self.double()
-
-    def forward(self, x, t):
-
-        # Perform the usual forward pass
-        x = F.relu(F.max_pool2d(self.conv1(x), 2))
-        x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
-        x = x.view(-1, 320)
-        x = F.relu(self.fc1(x))
-        x = F.dropout(x, training=self.training)
-
-        logits = 0 * self.output_layers[0](x)
-        for k, module in self.output_layers.items():
-            k_idx = (t==k)
-            logits_task = module(x[k_idx])
-            logits[k_idx] = logits_task
+#     def forward(self, x, t):
+#         feat = self.linear_relu_stack(x)
+#         # logits = torch.zeros((x.shape[0], 1), requires_grad=True)
+#         logits = 0 * self.output_layers[0](feat)
+#         for k, module in self.output_layers.items():
+#             k_idx = (t==k).flatten().bool()
+#             logits_task = module(feat[k_idx])
+#             logits[k_idx] = logits_task
+#         # ic(x)
+#         # ic(t)
+#         # ic(logits)
+#         # exit()
+#         return logits
 
 
-        return logits # F.log_softmax(x, dim=1)
+
+# class HardSharingConvNet(LightningModule):
+#     # L1 ImgIn shape=(?, 28, 28, 1)
+#     # Conv -> (?, 28, 28, 10)
+#     def __init__(self, n_channels=1, n_outputs=1, **kwargs):
+#         super(HardSharingConvNet, self).__init__()
+#         self.conv1 = nn.Conv2d(n_channels, 10, kernel_size=5)
+#         self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
+#         self.conv2_drop = nn.Dropout2d()
+#         self.fc1 = nn.Linear(320, 50)
+#         # self.fc2 = nn.Linear(50, n_outputs)
+#         self.n_outputs = n_outputs
+#         self.output_layers = {i: nn.Linear(50, 1).double() for i in range(n_outputs)}
+
+#         # self.double()
+
+#     def forward(self, x, t):
+
+#         # Perform the usual forward pass
+#         x = F.relu(F.max_pool2d(self.conv1(x), 2))
+#         x = F.relu(F.max_pool2d(self.conv2_drop(self.conv2(x)), 2))
+#         x = x.view(-1, 320)
+#         x = F.relu(self.fc1(x))
+#         x = F.dropout(x, training=self.training)
+
+#         logits = 0 * self.output_layers[0](x)
+#         for k, module in self.output_layers.items():
+#             k_idx = (t==k)
+#             logits_task = module(x[k_idx])
+#             logits[k_idx] = logits_task
+
+
+#         return logits # F.log_softmax(x, dim=1)
 
 
 
@@ -103,10 +103,10 @@ class HardSharingTorchCombinator(LightningModule):
         {"loss_fun": "mse"})
     def __init__(self,
                  n_features: int,
+                 tasks: Union[list, np.ndarray],
                  n_outputs: int = 1,
                  n_channel: int = 1,
                  n_last_hidden: int = 64,
-                 tasks: Union[list, np.ndarray] = None,
                  common_module=None,
                  **kwargs):
         """
@@ -117,7 +117,7 @@ class HardSharingTorchCombinator(LightningModule):
         self.loss_fun = kwargs["loss_fun"]
 
         self.n_outputs = n_outputs
-        self.output_layers = {i: nn.Linear(n_last_hidden, n_outputs).float() for i in range(n_outputs)}
+        self.output_layers = {r: nn.Linear(n_last_hidden, n_outputs).float() for r in tasks}
        
         if tasks is None:
             if common_module is None:
@@ -144,7 +144,7 @@ class HardSharingTorchCombinator(LightningModule):
         logits = zero_torch * self.output_layers[0](feat).float()
 
         for k, module in self.output_layers.items():
-            k_idx = (x_task==k)
+            k_idx = (x_task==k).flatten().bool()
             logits_task = module(feat[k_idx])
             logits[k_idx] = logits_task
         # ic(x)

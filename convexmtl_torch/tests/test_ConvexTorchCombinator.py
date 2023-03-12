@@ -22,11 +22,12 @@ class TestConvexTorchCombinator(unittest.TestCase):
         self.lamb = 0.5
         self.common_module = NeuralNetwork
         self.specific_modules = {0: NeuralNetwork, 1: NeuralNetwork}
-        self.specific_lambda = False
-        self.epochs = 100
+        self.specific_lambda = True
+        self.epochs = 10
         self.batch_size = 32
 
-        self.model = ConvexTorchCombinator(self.n_features, self.n_output, self.n_channel, self.tasks, self.lamb, self.common_module, self.specific_modules, self.specific_lambda)
+        self.model = ConvexTorchCombinator(self.n_features, self.tasks, self.n_output, self.n_channel, self.lamb, self.common_module, self.specific_modules, self.specific_lambda)
+        ic(self.model.get_lamb())
 
     def test_forward(self):
         x_data = torch.randn(10, self.n_features).float()
@@ -68,6 +69,7 @@ class TestConvexTorchCombinator(unittest.TestCase):
 
         score = loss(y_test, pred)
         ic(score)
+        ic(self.model.get_lamb())
 
         self.assertLessEqual(score, 1)
 

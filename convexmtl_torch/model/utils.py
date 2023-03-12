@@ -7,6 +7,7 @@ import torch.nn.functional as F
 from torch import optim
 from pytorch_lightning import LightningModule
 from functools import wraps
+import numpy as np
 
 def kwargs_decorator(dict_kwargs):
     def wrapper(f):
@@ -397,3 +398,7 @@ class SaveBestModel:
                 'optimizer_state_dict': optimizer.state_dict(),
                 'loss': criterion,
                 }, 'outputs/best_model.pth')
+            
+
+def invsigmoid(s, eps=1e-9):
+    return -np.log((1 / (s + eps)) - 1 + eps)

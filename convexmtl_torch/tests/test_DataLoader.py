@@ -1,34 +1,33 @@
 import unittest
-from mtlskl.data.DataLoader import DataLoader
+from convexmtl_torch.data.DataLoader import DataLoader
 import numpy as np
 
 from icecream import ic
 
 class TestDataLoader(unittest.TestCase):
-    def test_school_dataset(self):
-        data_loader = DataLoader(dataset_name='school')
-        self.assertEqual(data_loader.data.shape, (15362, 28))
-        self.assertEqual(data_loader.target.shape, (15362,))
-        uniq = np.unique(data_loader.data[:, data_loader.task_info])
+    def test_variations_mnist_dataset(self):
+        dataloader = DataLoader('my_data')
+        df_data, df_target, _, _, task_info = dataloader.load_dataset(dataset_name='variations_mnist')
+        ic(df_data)
+        self.assertEqual(df_data.shape, (70000, 785))
+        self.assertEqual(df_target.shape, (70000,))
+        uniq = np.unique(df_data[:, -1])
+        self.assertEqual(len(uniq), 3)
+
+    def test_variations_mnist_dataset(self):
+        dataloader = DataLoader('my_data')
+        df_data, df_target, _,  _,  task_info = dataloader.load_dataset(dataset_name='school')
+        ic(df_data)
+        self.assertEqual(df_data.shape, (15362, 28))
+        self.assertEqual(df_target.shape, (15362,1))
+        uniq = np.unique(df_data[:, -1])
+        ic(len(uniq))
         self.assertEqual(len(uniq), 139)
-
-    def test_computer_dataset(self):
-        data_loader = DataLoader(dataset_name='computer')
-        self.assertEqual(data_loader.data.shape, (3800, 14))
-        self.assertEqual(data_loader.target.shape, (3800,))
-        uniq = np.unique(data_loader.data[:, data_loader.task_info])
-        self.assertEqual(len(uniq), 190)
-
-    def test_compas_dataset(self):
-        data_loader = DataLoader(dataset_name='compas')
-        self.assertEqual(data_loader.data.shape, (3987, 8))
-        self.assertEqual(data_loader.target.shape, (3987,))
-        uniq = np.unique(data_loader.data[:, data_loader.task_info])
-        self.assertEqual(len(uniq), 8)
         
     def test_invalid_dataset(self):
-        with self.assertRaises(ValueError):
-            data_loader = DataLoader(dataset_name='invalid')
+        with self.assertRaises(AttributeError):
+            dataloader = DataLoader('my_data')
+            df_data, df_target, _, _ = dataloader.load_dataset(dataset_name='invalid')
 
 
 if __name__ == '__main__':
