@@ -267,12 +267,12 @@ def load_dataset_school(data_dir):
 
         outer_cv = StratifiedKFold(shuffle=True)
         inner_cv = StratifiedKFold(shuffle=True)
-        task_info=-2
+        task_info=-1
 
         return df_data.values, df_target.values, inner_cv, outer_cv, task_info
 
 
-def load_dataset_school_mini(data_dir, max_size=1000):
+def load_dataset_school_mini(data_dir, max_size=400):
         """Load dataframe from csv for mnist variations."""
 
         path = '{}/school/'.format(data_dir)        
@@ -281,6 +281,34 @@ def load_dataset_school_mini(data_dir, max_size=1000):
 
         outer_cv = StratifiedKFold(shuffle=True)
         inner_cv = StratifiedKFold(shuffle=True)
-        task_info=-2
+        task_info=-1
 
         return df_data.values, df_target.values, inner_cv, outer_cv, task_info
+
+def load_dataset_landmine(data_dir):
+    """Load dataframe from csv for landmine."""
+
+    path = '{}/landmine/'.format(data_dir)
+
+    df_data = pd.read_csv('{}/landmine_data.csv'.format(path), index_col=0)
+    df_target = pd.read_csv('{}/landmine_target.csv'.format(path), index_col=0)
+
+    outer_cv = StratifiedKFold(shuffle=True)
+    inner_cv = StratifiedKFold(shuffle=True)
+    task_info=-1
+
+    return df_data.values, df_target.values, inner_cv, outer_cv, task_info
+
+def load_dataset_landmine_mini(data_dir, max_size=400):
+    """Load dataframe from csv for landmine."""
+
+    path = '{}/landmine/'.format(data_dir)
+
+    df_data = pd.read_csv('{}/landmine_data.csv'.format(path), index_col=0)[:max_size]
+    df_target = pd.read_csv('{}/landmine_target.csv'.format(path), index_col=0)[:max_size]
+
+    outer_cv = StratifiedKFold(shuffle=True)
+    inner_cv = StratifiedKFold(shuffle=True)
+    task_info=-1
+
+    return df_data.values, df_target.values, inner_cv, outer_cv, task_info

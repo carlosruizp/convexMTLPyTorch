@@ -33,66 +33,63 @@ class ConvexMTLPytorchModel(BaseEstimator):
     --------------
     - layers: list containing the number of neurons in each one of the common hidden layers 
     of the network. The input and output layers sizes are determined by the problem.
-    - learning_rate: the 
+    - lr: the 
     """
-    _opt_keys = {'weight_decay'}
+    _opt_keys = {'weight_decay', 'lr'}
     _loss_keys = {}
 
-    @kwargs_decorator(
-        {"lambda_lr": 0.001,
-        "lambda_trainable" : False,
-        "weight_decay": 0,
-        "val_size": 0.1,
-        "min_delta": 1e-3,
-        "patience": 25,
-        "random_state": 42,
-        "early_stopping": True,
-        "lr_scheduler": True})
     def __init__(self,
                  loss_fun: str,
-                 common_module = None,
-                 specific_modules: dict = None,
-                 epochs: int=100,
-                 learning_rate=0.001,
-                 batch_size=128,
-                 verbose: int=1,
-                 lamb: float = 0.5,
-                 **kwargs):
+                 common_module,
+                 specific_modules: dict,
+                 epochs: int,
+                 lr: float,
+                 batch_size,
+                 verbose: int,
+                 lamb: float ,
+                 lambda_lr: float,
+                 lambda_trainable: bool,
+                 specific_lambda: bool,
+                 weight_decay: float,
+                 val_size: float,
+                 min_delta: float,
+                 patience: int,
+                 random_state: int,
+                 early_stopping: bool,
+                 lr_scheduler: bool,
+                 metrics: list,
+                 train_mode: str,
+                 enable_progress_bar: True
+                ):
                  
         super(ConvexMTLPytorchModel, self).__init__()
         self.common_module = common_module
         self.specific_modules = specific_modules
         self.loss_fun = loss_fun
         self.epochs = epochs
-        self.learning_rate = learning_rate
+        self.lr = lr
         self.batch_size = batch_size
         self.verbose = verbose
         self.lamb = lamb
-        self.opt_kwargs = {}
-        self.loss_kwargs = {}
-        for k, v in kwargs.items():
-            if k in ConvexMTLPytorchModel._opt_keys:
-                self.opt_kwargs[k] = v
-            elif k in ConvexMTLPytorchModel._loss_keys:
-                self.loss_kwargs[k] = v
-        self.lambda_lr = kwargs["lambda_lr"]
-        self.lambda_trainable = kwargs["lambda_trainable"]
-        self.specific_lambda = kwargs["specific_lambda"]
-        # self.weight_decay = kwargs["weight_decay"]
-        self.val_size = kwargs["val_size"]
-        self.min_delta = kwargs["min_delta"]
-        self.patience = kwargs["patience"]
-        self.metrics = kwargs["metrics"]
-        self._random_state = kwargs["random_state"]
-        self.train_mode = kwargs["train_mode"]
-        self.early_stopping = kwargs["early_stopping"]
-        self.lr_scheduler = kwargs["lr_scheduler"]
+        self.lambda_lr = lambda_lr
+        self.lambda_trainable = lambda_trainable
+        self.specific_lambda = specific_lambda
+        if not lambda_trainable and specific_lambda:
+            raise ValueError("specific_lambda=True requires lambda_trainable=True")
+        self.weight_decay = weight_decay
+        self.val_size = val_size
+        self.min_delta = min_delta
+        self.patience = patience
+        self.metrics = metrics
+        self.random_state = random_state
+        self.train_mode = train_mode
+        self.early_stopping = early_stopping
+        self.lr_scheduler = lr_scheduler
+        self.enable_progress_bar = enable_progress_bar
 
     
     def predict_(self, X, task_info=-1, **kwargs):
         n, m = X.shape
-
-
         task_col = task_info
         self.unique, self.groups_idx = npi.group_by(X[:, task_col],
                                                     np.arange(n))
@@ -196,23 +193,17 @@ class ConvexMTLPytorchModel(BaseEstimator):
     #     self.model_fname = model_fname
     #     return
 
-    def get_opt_(self, **opt_kwargs):
-        params = self.model.get_params()        
-        # ic(params)
-        opt = optim.AdamW(params, **opt_kwargs)#, lr=self.learning_rate)
+    # def get_opt_(self, **opt_kwargs):
+    #     params = self.model.get_params()        
+    #     # ic(params)
+    #     ic(self.lr, self.lambda_lr, self.weight_decay)
+    #     opt = optim.AdamW(params, **opt_kwargs)#, lr=self.lr)
         
-        return opt
+    #     return opt
 
     def get_opt(self):
         assert hasattr(self, 'model')
-        if not hasattr(self, 'opt'):
-             self.opt = self.get_opt_(**self.opt_kwargs)
-        return self.opt
-
-    def get_model(self, X, y):
-        if not hasattr(self, 'model'):
-             self.model = self.create_model_(X, y, **self.model_kwargs)
-        return self.model
+        return self.model.configure_optimizers()
 
     def _get_reg(self, **reg_kwargs):
         raise NotImplementedError()
@@ -223,6 +214,10 @@ class ConvexMTLPytorchModel(BaseEstimator):
             'l1': nn.L1Loss,
             'cross_entropy': nn.CrossEntropyLoss
         }
+        loss_kwargs = {}
+        for k in self._loss_keys:
+            if hasattr(self, k):
+                loss_kwargs[k] = getattr(self, k)
         return switcher.get(self.loss_fun, "Invalid Loss Function.")(**loss_kwargs)
 
     def _get_metric(self, metric):
@@ -241,7 +236,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
     
     # @profile(output_file='train_lightning_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
     def _train_lightning(self, train_dl, valid_dl):
-        trainer = Trainer(max_epochs=self.epochs)
+        trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar)
         if self.val:
             trainer.fit(self.model, train_dl, valid_dl)
         else:
@@ -253,7 +248,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
         best_val = np.inf
         old_val_loss = np.inf
         early_stopping_count = 0
-        with trange(int(self.epochs), desc='Loss', position=0, leave=True, disable=not self.verbose) as tri:
+        with trange(int(self.epochs), desc='Loss', position=0, leave=True, disable=not self.enable_progress_bar) as tri:
                 for epoch in tri:
                     self.model.train()
                     if self.lambda_trainable:
@@ -327,13 +322,13 @@ class ConvexMTLPytorchModel(BaseEstimator):
         best_val = np.inf
         old_val_loss = np.inf
         early_stopping_count = 0
-        with trange(int(self.epochs), desc='Loss', position=0, leave=True, disable=not self.verbose) as tri:
+        with trange(int(self.epochs), desc='Loss', position=0, leave=True, disable=not self.enable_progress_bar) as tri:
             for epoch in tri:
                 self.model.train()
                 self.log_lambda()
                 n_train = X_train.shape[0]
                 sample_idx = np.arange(n_train, dtype=int)                        
-                sample_idx = shuffle(sample_idx, random_state=self._random_state)
+                sample_idx = shuffle(sample_idx, random_state=self.random_state)
                 accumulated_loss = 0
                 for batch_slice in gen_batches(n_train, self.batch_size):
                     xb = X_train[sample_idx[batch_slice]]
@@ -395,7 +390,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
                             
                             break
                     
-                    best_val = self._early_stopping.best_loss
+                        best_val = self._early_stopping.best_loss
 
                     if self.lr_scheduler:
                         self._lr_scheduler(val_loss)
@@ -486,10 +481,10 @@ class ConvexMTLPytorchModel(BaseEstimator):
         #if not hasattr(self, 'model'):
         self.model = self.create_model(X_data, X_task, y)
         # if not hasattr(self, 'opt'):
-        self.opt = self.get_opt_()
+        self.opt = self.get_opt()
 
         # self.reg_ = self._get_reg()
-        self.loss_fun_ = self._get_loss_fun(**self.loss_kwargs)
+        self.loss_fun_ = self._get_loss_fun()
 
 
         # Generate validation sets
@@ -544,6 +539,9 @@ class ConvexMTLPytorchModel(BaseEstimator):
             if self.lr_scheduler:
                 self._lr_scheduler = LRScheduler(self.opt, patience=self.patience)
 
+        else:
+            valid_dl = None
+
 
         # initialize metrics and loss variables
         metric_scorers = {m: self._get_metric(m) for m in self.metrics}
@@ -565,6 +563,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
             self.lambda_history_ = []
 
 
+        # ic(self.train_mode)
         # train the network
         if self.train_mode == 'lightning':
             self._train_lightning(train_dl, valid_dl)
@@ -586,7 +585,11 @@ class ConvexMTLPytorchModel(BaseEstimator):
             "lambda_trainable": self.lambda_trainable,
             "specific_lambda": self.specific_lambda,
         }
-        model_kwargs = {**model_kwargs, **kwargs}
+        opt_kwargs = {}
+        for k in self._opt_keys:
+            if hasattr(self, k):
+                opt_kwargs[k] = getattr(self, k)
+        model_kwargs = {**model_kwargs, **opt_kwargs, **kwargs}
         model = ConvexTorchCombinator(n_features=input_dim,
                                       n_output=n_output,
                                       n_channel=n_channel,
@@ -670,51 +673,61 @@ class ConvexMTLPytorchModel(BaseEstimator):
 class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
     """Multi-layer Perceptron classifier using Keras.
     """
-    @kwargs_decorator(
-        {"weight_decay": 0,
-        "min_delta": 1e-4,
-        "random_state": 42,
-        "metrics": [],
-        "train_mode": "numpy",
-        })
     def __init__(self,
                 loss_fun: str='cross_entropy',
                 common_module=None,
                 specific_modules: dict=None,
                 epochs: int=100,
-                learning_rate: float=0.1,
+                lr: float=1e-3,
                 batch_size: int=128,
                 verbose: int=1,
                 lamb: float = 0.5,
-                weight_decay=0.1,
+                weight_decay: float=0.01,
                 val_size = 0.2,
                 patience = 20,
                 lambda_trainable = False,
                 specific_lambda = False,
                 lambda_lr = 0.001,
-                **kwargs):
-        # kwargs = {**kwargs, **{'weight_decay': weight_decay}}
-        self.weight_decay = weight_decay
-        if not lambda_trainable and specific_lambda:
-            raise ValueError("specific_lambda=True requires lambda_trainable=True")
-        kwargs = {**kwargs, **{"val_size": val_size, "patience": patience, "lambda_trainable": lambda_trainable,
-                                "specific_lambda": specific_lambda, "lambda_lr": lambda_lr}}
-        super(ConvexMTLPytorchClassifier, self).__init__(common_module=common_module,
-                                                    specific_modules=specific_modules,
-                                                    loss_fun=loss_fun,
-                                                    epochs=epochs,
-                                                    learning_rate=learning_rate,
-                                                    batch_size=batch_size,
-                                                    verbose=verbose,
-                                                    lamb=lamb,
-                                                    **kwargs)
+                min_delta = 1e-4,
+                random_state = 42,
+                metrics = [],
+                train_mode='numpy',
+                early_stopping=True,
+                lr_scheduler = True,
+                enable_progress_bar = True):
+        super().__init__(loss_fun=loss_fun,
+                         common_module=common_module,
+                         specific_modules=specific_modules,
+                         epochs=epochs,
+                         lr=lr,
+                         batch_size=batch_size,
+                         verbose=verbose,
+                         lamb=lamb,
+                         weight_decay=weight_decay,
+                         val_size=val_size,
+                         patience=patience,
+                         lambda_trainable=lambda_trainable,
+                         specific_lambda=specific_lambda,
+                         lambda_lr=lambda_lr,
+                         min_delta=min_delta,
+                         random_state=random_state,
+                         metrics=metrics,
+                         train_mode=train_mode,
+                         early_stopping=early_stopping,
+                         lr_scheduler=lr_scheduler,
+                         enable_progress_bar=enable_progress_bar)
         
     
     
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
-        y_int = y.astype(int)
+        y_flat = y.astype(int).flatten()
+
+        # if y.ndim == 1:
+        #     y_2d = y_int[:, None]
+        # else:
+        #     y_2d = y_int
         
-        super(ConvexMTLPytorchClassifier, self).fit(X, y, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
+        super(ConvexMTLPytorchClassifier, self).fit(X, y_flat, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
     
     def predict(self, X, task_info=-1, **kwargs):
         """Predict using the multi-layer perceptron classifier
@@ -767,7 +780,7 @@ class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
 
         unique = np.unique(y)
         n_outputs = len(unique)
-        if self.new_shape is None:
+        if not hasattr(self, 'new_shape') or self.new_shape is None:
             n_channel = 1
         else:
             n_channel = self.new_shape[0]
@@ -779,44 +792,50 @@ class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
 class ConvexMTLPytorchRegressor(ConvexMTLPytorchModel):
     """Multi-layer Perceptron Regressor using Keras.
     """
-    @kwargs_decorator(
-        {"weight_decay": 0,
-        "min_delta": 1e-4,
-        "random_state": 42,
-        "metrics": [],
-        "train_mode": "numpy",
-        })
     def __init__(self,
-                loss_fun: str='mse',
-                common_module=None,
-                specific_modules: dict=None,
-                epochs: int=100,
-                learning_rate: float=0.1,
-                batch_size: int=128,
-                verbose: int=1,
-                lamb: float = 0.5,
-                weight_decay=0.1,
-                val_size = 0.2,
-                patience = 20,
-                lambda_trainable = False,
-                specific_lambda = False,
-                lambda_lr = 0.001,
-                **kwargs):
+                 loss_fun: str='mse',
+                 common_module=None,
+                 specific_modules: dict=None,
+                 epochs: int=100,
+                 lr: float=1e-3,
+                 batch_size: int=128,
+                 verbose: int=1,
+                 lamb: float = 0.5,
+                 weight_decay: float = 0.01,
+                 val_size = 0.2,
+                 patience = 20,
+                 lambda_trainable = False,
+                 specific_lambda = False,
+                 lambda_lr = 0.001,
+                 min_delta = 1e-4,
+                 random_state = 42,
+                 metrics = [],
+                 train_mode='numpy',
+                 early_stopping=True,
+                 lr_scheduler = True,
+                 enable_progress_bar = True):
         # kwargs = {**kwargs, **{'weight_decay': weight_decay}}
-        self.weight_decay = weight_decay
-        if not lambda_trainable and specific_lambda:
-            raise ValueError("specific_lambda=True requires lambda_trainable=True")
-        kwargs = {**kwargs, **{"val_size": val_size, "patience": patience, "lambda_trainable": lambda_trainable,
-                                "specific_lambda": specific_lambda, "lambda_lr": lambda_lr}}
-        super(ConvexMTLPytorchRegressor, self).__init__(common_module=common_module,
-                                                    specific_modules=specific_modules,
-                                                    loss_fun=loss_fun,
-                                                    epochs=epochs,
-                                                    learning_rate=learning_rate,
-                                                    batch_size=batch_size,
-                                                    verbose=verbose,
-                                                    lamb=lamb,
-                                                    **kwargs)
+        super().__init__(loss_fun=loss_fun,
+                         common_module=common_module,
+                         specific_modules=specific_modules,
+                         epochs=epochs,
+                         lr=lr,
+                         batch_size=batch_size,
+                         verbose=verbose,
+                         lamb=lamb,
+                         weight_decay=weight_decay,
+                         val_size=val_size,
+                         patience=patience,
+                         lambda_trainable=lambda_trainable,
+                         specific_lambda=specific_lambda,
+                         lambda_lr=lambda_lr,
+                         min_delta=min_delta,
+                         random_state=random_state,
+                         metrics=metrics,
+                         train_mode=train_mode,
+                         early_stopping=early_stopping,
+                         lr_scheduler=lr_scheduler,
+                         enable_progress_bar=enable_progress_bar)
 
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
         if y.ndim == 1:

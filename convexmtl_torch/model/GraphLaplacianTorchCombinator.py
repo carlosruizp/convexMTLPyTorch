@@ -102,12 +102,14 @@ class GraphLaplacianConvNet(LightningModule):
 
 class GraphLaplacianTorchCombinator(LightningModule):
 
+    _opt_keys = {'weight_decay', 'lr',}
+    
     @kwargs_decorator(
         {
-        "loss_fun": "mse",
-        "adj_trainable": True,
+        "lr": 1e-3,
         "adj_lr": 1e-2,
-        "log_matrix_freq": 50
+        "log_matrix_freq": 50,
+        "weight_decay": 1e-2,
         }
         )
     def __init__(self,
@@ -117,8 +119,10 @@ class GraphLaplacianTorchCombinator(LightningModule):
                  n_channel: int = 1,
                  n_last_hidden: int = 64,
                  common_module=None,
+                 adj_trainable = True,
                  nu=1,
                  mu=1e-3,
+                 loss_fun="mse",
                  **kwargs):
         """
         In the constructor we instantiate two nn.Linear modules and assign them as
@@ -129,10 +133,9 @@ class GraphLaplacianTorchCombinator(LightningModule):
         self.nu = nu
         self.mu = mu
 
-        self.loss_fun = kwargs["loss_fun"]
-        self.adj_trainable = kwargs["adj_trainable"]
-        self.adj_lr = kwargs["adj_lr"]
-        self.log_matrix_freq = kwargs["log_matrix_freq"]
+        self.loss_fun = loss_fun
+        self.adj_trainable = adj_trainable
+        
 
         self.n_outputs = n_outputs
         self.output_layers = {r: nn.Linear(n_last_hidden, n_outputs).float() for r in tasks}
@@ -152,7 +155,11 @@ class GraphLaplacianTorchCombinator(LightningModule):
             if common_module is None:
                 common_module = NeuralNetworkFeatLearn
             self.common_module_ = common_module(n_features=n_features, n_channels=n_channel, n_last_hidden=n_last_hidden)
-        # # self.double()
+        
+        self.adj_lr = kwargs["adj_lr"]
+        self.log_matrix_freq = kwargs["log_matrix_freq"]
+        self.lr = kwargs["lr"]
+        self.weight_decay = kwargs["weight_decay"]
 
     def forward(self, x_data, x_task):
         """
@@ -207,6 +214,10 @@ class GraphLaplacianTorchCombinator(LightningModule):
     
     def configure_optimizers(self):
         params = self.get_params()
+        opt_kwargs = {}
+        for k in self._opt_keys:
+            opt_kwargs[k] = getattr(self, k)
+        ic(opt_kwargs)
         return optim.AdamW(params)
 
 
@@ -279,11 +290,11 @@ class GraphLaplacianTorchCombinator(LightningModule):
 
     def _log_adjMatrix(self):
         if self.current_epoch % self.log_matrix_freq == 0:
-            ic(self.get_adjMatrix())
-            ic(self.entropy)
+            # ic(self.get_adjMatrix())
+            # ic(self.entropy)
             tensorboard = self.logger.experiment
             fig = self.get_fig_adjMatrix()
-            ic(self.current_epoch)
+            # ic(self.current_epoch)
             tensorboard.add_figure(tag='adj_matrix', 
                                    figure=fig, global_step=self.current_epoch)
     

@@ -16,11 +16,13 @@ from typing import Union
 
 class ConvexTorchCombinator(LightningModule):
 
-    # @kwargs_decorator(
-    #     {"lambda_trainable": True,
-    #      "lambda_lr": 1e-2,
-    #      "loss_fun": "mse",
-    #      })
+    _opt_keys = {'weight_decay', 'lr',}
+
+    @kwargs_decorator(
+        {"lr": 1e-3,
+         "lambda_lr": 1e-3,
+         "weight_decay": 1e-2,
+         })
     def __init__(self,
                  n_features: int,
                  tasks: Union[list, np.ndarray],
@@ -31,7 +33,6 @@ class ConvexTorchCombinator(LightningModule):
                  specific_modules: dict=None,
                  specific_lambda = False,
                  lambda_trainable = True,
-                 lambda_lr = 1e-2,
                  loss_fun = 'mse',
                  **kwargs):
         """
@@ -40,7 +41,6 @@ class ConvexTorchCombinator(LightningModule):
         """
         super(ConvexTorchCombinator, self).__init__()
         self.lambda_trainable = lambda_trainable # kwargs["lambda_trainable"]
-        self.lambda_lr = lambda_lr # kwargs["lambda_lr"]
         self.loss_fun = loss_fun # kwargs["loss_fun"]
         self.tasks = tasks
         assert (0 <= lamb and lamb <= 1)
@@ -69,12 +69,9 @@ class ConvexTorchCombinator(LightningModule):
             for t in tasks:
                 self.specific_modules_[t] = common_module(n_features=n_features, n_output=n_output, n_channels=n_channel)
 
-                # if unique.dtype == 'float':
-                #     tasks = ['{:.0f}'.format(u) for u in unique]
-                # else:       
-                #     tasks = unique.astype(str)
-                # self.add_module('task{}_module'.format(t), self.specific_modules_[t])
-        # self.double()
+        self.lambda_lr = kwargs["lambda_lr"]
+        self.lr = kwargs["lr"]
+        self.weight_decay = kwargs["weight_decay"]
 
     def forward(self, x_data, x_task):
         """
@@ -130,10 +127,14 @@ class ConvexTorchCombinator(LightningModule):
     
     def configure_optimizers(self):
         params = self.get_params()
-        return optim.AdamW(params)
+        opt_kwargs = {}
+        for k in self._opt_keys:
+            opt_kwargs[k] = getattr(self, k)
+        return optim.AdamW(params, **opt_kwargs)
 
     def training_step(self, batch, batch_idx, **kwargs):
         x, t, y = batch
+        # ic(self.global_step, x.shape)
         logits = self(x, t)
         loss_fun = self._get_loss_fun()
         loss = loss_fun(logits, y)
@@ -152,6 +153,9 @@ class ConvexTorchCombinator(LightningModule):
             ic(self.lamb)
             lamb_ = torch.sigmoid(self.lamb).detach().numpy()
             return lamb_
+        
+    # def training_epoch_end(self, outputs):
+    #     print('')
 
 
 

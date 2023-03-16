@@ -33,59 +33,63 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
     --------------
     - layers: list containing the number of neurons in each one of the common hidden layers 
     of the network. The input and output layers sizes are determined by the problem.
-    - learning_rate: the 
+    - lr: the 
     """
-    _opt_keys = {'weight_decay'}
+    _opt_keys = {'weight_decay', 'lr'}
     _loss_keys = {}
 
-    @kwargs_decorator(
-        {"adj_lr": 0.001,
-        "adj_trainable" : False,
-        "weight_decay": 0,
-        "val_size": 0.1,
-        "min_delta": 1e-3,
-        "patience": 25,
-        "random_state": 42,
-        "early_stopping": True,
-        "lr_scheduler": True})
     def __init__(self,
-                 loss_fun: str,
-                 common_module = None,
-                 specific_modules: dict = None,
-                 epochs: int=100,
-                 learning_rate=0.001,
-                 batch_size=128,
-                 verbose: int=1,
-                 adj: np.array = None,
-                 **kwargs):
+                 loss_fun,
+                 common_module,
+                 specific_modules,
+                 epochs,
+                 lr,
+                 batch_size,
+                 verbose,
+                 adj,
+                 adj_lr,
+                 adj_trainable,
+                 weight_decay,
+                 val_size,
+                 min_delta,
+                 patience,
+                 random_state,
+                 early_stopping,
+                 lr_scheduler,
+                 metrics: list,
+                 train_mode: str,
+                 nu: float,
+                 mu: float,
+                 ):
                  
         super(GraphLaplacianMTLPytorchModel, self).__init__()
         self.common_module = common_module
         self.specific_modules = specific_modules
         self.loss_fun = loss_fun
         self.epochs = epochs
-        self.learning_rate = learning_rate
+        self.lr = lr
         self.batch_size = batch_size
         self.verbose = verbose
         self.adj = adj
+        self.adj_lr = adj_lr
+        self.adj_trainable = adj_trainable
+        self.weight_decay = weight_decay
+        self.val_size = val_size
+        self.min_delta = min_delta
+        self.patience = patience
+        self.metrics = metrics
+        self.random_state = random_state
+        self.train_mode = train_mode
+        self.early_stopping = early_stopping
+        self.lr_scheduler = lr_scheduler
+        self.nu = nu
+        self.mu = mu
+
         self.opt_kwargs = {}
         self.loss_kwargs = {}
-        for k, v in kwargs.items():
-            if k in GraphLaplacianMTLPytorchModel._opt_keys:
-                self.opt_kwargs[k] = v
-            elif k in GraphLaplacianMTLPytorchModel._loss_keys:
-                self.loss_kwargs[k] = v
-        self.adj_lr = kwargs["adj_lr"]
-        self.adj_trainable = kwargs["adj_trainable"]
-        # self.weight_decay = kwargs["weight_decay"]
-        self.val_size = kwargs["val_size"]
-        self.min_delta = kwargs["min_delta"]
-        self.patience = kwargs["patience"]
-        self.metrics = kwargs["metrics"]
-        self._random_state = kwargs["random_state"]
-        self.train_mode = kwargs["train_mode"]
-        self.early_stopping = kwargs["early_stopping"]
-        self.lr_scheduler = kwargs["lr_scheduler"]
+        for k in self._opt_keys:
+            if hasattr(self, k):
+                self.opt_kwargs[k] = getattr(self, k)
 
     
     def predict_(self, X, task_info=-1, **kwargs):
@@ -195,22 +199,22 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
     #     return
 
     
-    def get_opt_(self, **opt_kwargs):
-        params = self.model.get_params()        
-        # ic(params)
-        opt = optim.AdamW(params, **opt_kwargs)#, lr=self.learning_rate)        
-        return opt
+    # def get_opt_(self, **opt_kwargs):
+    #     params = self.model.get_params()        
+    #     # ic(params)
+    #     ic(self.lr, self.lambda_lr, self.weight_decay)
+    #     opt = optim.AdamW(params, **opt_kwargs)#, lr=self.lr)
+        
+    #     return opt
 
     def get_opt(self):
         assert hasattr(self, 'model')
-        if not hasattr(self, 'opt'):
-             self.opt = self.get_opt_(**self.opt_kwargs)
-        return self.opt
+        return self.model.configure_optimizers()
+        # ic(self.opt_kwargs)
+        # if not hasattr(self, 'opt'):
+        #      self.opt = self.get_opt_(**self.opt_kwargs)
+        # return self.opt
 
-    def get_model(self, X, y):
-        if not hasattr(self, 'model'):
-             self.model = self.create_model_(X, y, **self.model_kwargs)
-        return self.model
 
     def _get_reg(self, **reg_kwargs):
         raise NotImplementedError()
@@ -317,7 +321,7 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                 self.model.train()
                 n_train = X_train.shape[0]
                 sample_idx = np.arange(n_train, dtype=int)                        
-                sample_idx = shuffle(sample_idx, random_state=self._random_state)
+                sample_idx = shuffle(sample_idx, random_state=self.random_state)
                 accumulated_loss = 0
                 for batch_slice in gen_batches(n_train, self.batch_size):
                     xb = X_train[sample_idx[batch_slice]]
@@ -459,7 +463,7 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
         #if not hasattr(self, 'model'):
         self.model = self.create_model(X_data, X_task, y)
         # if not hasattr(self, 'opt'):
-        self.opt = self.get_opt_()
+        self.opt = self.get_opt()
 
         # self.reg_ = self._get_reg()
         self.loss_fun_ = self._get_loss_fun(**self.loss_kwargs)
@@ -516,7 +520,8 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
             # lr scheduler
             if self.lr_scheduler:
                 self._lr_scheduler = LRScheduler(self.opt, patience=self.patience)
-
+        else:
+            valid_dl = None
 
         # initialize metrics and loss variables
         metric_scorers = {m: self._get_metric(m) for m in self.metrics}
@@ -558,7 +563,7 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
         kwargs = {
             "adj_trainable": self.adj_trainable,
         }
-        model_kwargs = {**model_kwargs, **kwargs}
+        model_kwargs = {**model_kwargs, **self.opt_kwargs, **kwargs}
         model = GraphLaplacianTorchCombinator(n_features=input_dim,
                                               n_output=n_output,
                                               n_channel=n_channel,
@@ -566,6 +571,8 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                                               adj=self.adj,
                                               common_module=self.common_module,
                                               specific_modules=self.specific_modules,
+                                              nu=self.nu,
+                                              mu=self.mu,
                                               **model_kwargs)        
         return model
     
@@ -613,41 +620,50 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
 class GraphLaplacianMTLPytorchClassifier(GraphLaplacianMTLPytorchModel):
     """Multi-layer Perceptron classifier using Keras.
     """
-    @kwargs_decorator(
-        {"weight_decay": 0,
-        "min_delta": 1e-4,
-        "random_state": 42,
-        "metrics": [],
-        "train_mode": "numpy",
-        })
     def __init__(self,
                 loss_fun: str='cross_entropy',
                 common_module=None,
                 specific_modules: dict=None,
                 epochs: int=100,
-                learning_rate: float=0.1,
+                lr: float= 1e-3,
                 batch_size: int=128,
                 verbose: int=1,
                 adj: np.array = None,
-                weight_decay=0.1,
+                weight_decay=0.01,
                 val_size = 0.2,
                 patience = 20,
                 adj_trainable = False,
-                adj_lr = 0.001,
-                **kwargs):
-        # kwargs = {**kwargs, **{'weight_decay': weight_decay}}
-        self.weight_decay = weight_decay
-        kwargs = {**kwargs, **{"val_size": val_size, "patience": patience, "adj_trainable": adj_trainable,
-                                "adj_lr": adj_lr}}
-        super(GraphLaplacianMTLPytorchClassifier, self).__init__(common_module=common_module,
-                                                    specific_modules=specific_modules,
-                                                    loss_fun=loss_fun,
-                                                    epochs=epochs,
-                                                    learning_rate=learning_rate,
-                                                    batch_size=batch_size,
-                                                    verbose=verbose,
-                                                    adj=adj,
-                                                    **kwargs)
+                adj_lr = 1e-3,
+                min_delta = 1e-4,
+                random_state = 42,
+                metrics = [],
+                train_mode='numpy',
+                early_stopping=True,
+                lr_scheduler = True,
+                nu=1,
+                mu=1e-3,
+                ):
+        super().__init__(loss_fun=loss_fun,
+                         common_module=common_module,
+                         specific_modules=specific_modules,
+                         epochs=epochs,
+                         lr=lr,
+                         batch_size=batch_size,
+                         verbose=verbose,
+                         adj=adj,
+                         weight_decay=weight_decay,
+                         val_size=val_size,
+                         patience=patience,
+                         adj_trainable=adj_trainable,
+                         adj_lr=adj_lr,
+                         min_delta=min_delta,
+                         random_state=random_state,
+                         metrics=metrics,
+                         train_mode=train_mode,
+                         early_stopping=early_stopping,
+                         lr_scheduler=lr_scheduler,
+                         nu=nu,
+                         mu=mu)
         
     
     
@@ -719,41 +735,50 @@ class GraphLaplacianMTLPytorchClassifier(GraphLaplacianMTLPytorchModel):
 class GraphLaplacianMTLPytorchRegressor(GraphLaplacianMTLPytorchModel):
     """Multi-layer Perceptron Regressor using Keras.
     """
-    @kwargs_decorator(
-        {"weight_decay": 0,
-        "min_delta": 1e-4,
-        "random_state": 42,
-        "metrics": [],
-        "train_mode": "numpy",
-        })
     def __init__(self,
                 loss_fun: str='mse',
                 common_module=None,
                 specific_modules: dict=None,
                 epochs: int=100,
-                learning_rate: float=0.1,
+                lr: float=1e-3,
                 batch_size: int=128,
                 verbose: int=1,
                 adj: np.array = None,
-                weight_decay=0.1,
+                weight_decay=0.01,
                 val_size = 0.2,
                 patience = 20,
                 adj_trainable = False,
-                adj_lr = 0.001,
-                **kwargs):
-        # kwargs = {**kwargs, **{'weight_decay': weight_decay}}
-        self.weight_decay = weight_decay
-        kwargs = {**kwargs, **{"val_size": val_size, "patience": patience, "adj_trainable": adj_trainable,
-                                "adj_lr": adj_lr}}
-        super(GraphLaplacianMTLPytorchRegressor, self).__init__(common_module=common_module,
-                                                                specific_modules=specific_modules,
-                                                                loss_fun=loss_fun,
-                                                                epochs=epochs,
-                                                                learning_rate=learning_rate,
-                                                                batch_size=batch_size,
-                                                                verbose=verbose,
-                                                                adj=adj,
-                                                                **kwargs)
+                adj_lr = 1e-3,
+                min_delta = 1e-4,
+                random_state = 42,
+                metrics = [],
+                train_mode='numpy',
+                early_stopping=True,
+                lr_scheduler = True,
+                nu=1,
+                mu=1e-3,
+                ):
+        super().__init__(loss_fun=loss_fun,
+                         common_module=common_module,
+                         specific_modules=specific_modules,
+                         epochs=epochs,
+                         lr=lr,
+                         batch_size=batch_size,
+                         verbose=verbose,
+                         adj=adj,
+                         weight_decay=weight_decay,
+                         val_size=val_size,
+                         patience=patience,
+                         adj_trainable=adj_trainable,
+                         adj_lr=adj_lr,
+                         min_delta=min_delta,
+                         random_state=random_state,
+                         metrics=metrics,
+                         train_mode=train_mode,
+                         early_stopping=early_stopping,
+                         lr_scheduler=lr_scheduler,
+                         nu=nu,
+                         mu=mu)
 
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
         if y.ndim == 1:
@@ -761,7 +786,7 @@ class GraphLaplacianMTLPytorchRegressor(GraphLaplacianMTLPytorchModel):
         else:
             y_2d = y
         
-        super(GraphLaplacianMTLPytorchRegressor, self).fit(X, y_2d, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
+        super().fit(X, y_2d, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
 
     def create_model(self, X_data, X_task, y, task_info=-1, name=None):
         self.task_info = task_info

@@ -368,7 +368,7 @@ class EarlyStopping():
                     if not hasattr(self, 'best_model_state_dict'):
                         self.best_model_state_dict = deepcopy(model.state_dict())
                         self.best_optimizer_state_dict = deepcopy(optimizer.state_dict())
-                    print('INFO: Early stopping')
+                    # print('INFO: Early stopping')
                     self.early_stop = True
 
 
@@ -400,5 +400,5 @@ class SaveBestModel:
                 }, 'outputs/best_model.pth')
             
 
-def invsigmoid(s, eps=1e-9):
+def invsigmoid(s, eps=1e-7):
     return -np.log((1 / (s + eps)) - 1 + eps)

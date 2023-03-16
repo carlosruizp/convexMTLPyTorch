@@ -8,9 +8,9 @@ from icecream import ic
 import joblib
 
 RESULTS_DIR = 'results'
-def train_gs(estim, params, X, y, model_name, problem_name, cv=None, scoring=None, refit=False):
+def train_gs(estim, params, X, y, model_name, problem_name, cv=None, scoring=None, retrain=False):
     pathname = '{}/{}_{}.joblib'.format(RESULTS_DIR, problem_name, model_name)
-    if refit or not os.path.exists(pathname):
+    if retrain or not os.path.exists(pathname):
         gs = GridSearchCV(estimator=estim, param_grid=params, cv=cv, scoring=scoring)
         gs.fit(X, y)
         joblib.dump(gs, pathname)

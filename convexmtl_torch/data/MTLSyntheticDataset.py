@@ -307,7 +307,7 @@ class MTLCommonRegression(MTLSyntheticRegressionDataset):
     def _generate_tasks(self):
         tasks = []
         for t in range(self.n_tasks):
-            m_t = 5 # randint(3,5)
+            m_t = randint(3,5)
             tasks.extend([t*10+j for j in range(m_t)])
         ic(tasks)
         return tasks

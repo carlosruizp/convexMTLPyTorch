@@ -19,7 +19,6 @@ from icecream import ic
 class TestConvexMTLPytorchClassifier(unittest.TestCase):
     def setUp(self):
         
-        self.module = ConvNet # NeuralNetwork
         self.specific_modules = {0: NeuralNetwork, 1: NeuralNetwork}
         self.specific_lambda = True
         self.epochs = 50
@@ -27,40 +26,41 @@ class TestConvexMTLPytorchClassifier(unittest.TestCase):
         self.max_train = 500
         
 
-        self.model = ConvexMTLPytorchClassifier(common_module=self.module)
-        ic(self.model)
+    def test_fit_tabular(self):
+        model = ConvexMTLPytorchClassifier(common_module=NeuralNetwork)
 
-    # def test_fit_tabular(self):
-    #     dataloader = DataLoader('my_data')
-    #     X, y, _,  _,  task_info = dataloader.load_dataset(dataset_name='school')
-    #     X_train, y_train = X[:self.max_train], y[:self.max_train]
-    #     self.model.fit(X_train, y_train)
-    #     try:
-    #         self.model.predict(X_train)
-    #     except NotFittedError as e:
-    #         print(repr(e))
+        dataloader = DataLoader('my_data')
+        X, y, _,  _,  task_info = dataloader.load_dataset(dataset_name='landmine_mini')
+        X_train, y_train = X[:self.max_train], y[:self.max_train]
+        model.fit(X_train, y_train)
+        try:
+            model.predict(X_train)
+        except NotFittedError as e:
+            print(repr(e))
 
     # def test_score_train_tabular(self):
     #     dataloader = DataLoader('my_data')
     #     X, y, _,  _,  task_info = dataloader.load_dataset(dataset_name='school')
     #     X_train, y_train = X[:self.max_train], y[:self.max_train]
-    #     self.model.fit(X_train, y_train)
+    #     model.fit(X_train, y_train)
     #     try:
-    #         pred = self.model.predict(X_train)
+    #         pred = model.predict(X_train)
     #     except NotFittedError as e:
     #         print(repr(e))
     #     score_train = mean_squared_error(y_train, pred)
     #     ic(score_train)
 
-    def test_fit_image(self):
-        dataloader = DataLoader('my_data')
-        X, y, _,  _,  task_info = dataloader.load_dataset(dataset_name='variations_mnist')
-        X_train, y_train = X[:self.max_train], y[:self.max_train]
-        self.model.fit(X_train, y_train, new_shape=(1, 28, 28))
-        try:
-            self.model.predict(X_train)
-        except NotFittedError as e:
-            print(repr(e))
+    # def test_fit_image(self):
+    #     model = ConvexMTLPytorchClassifier(common_module=ConvNet)
+
+    #     dataloader = DataLoader('my_data')
+    #     X, y, _,  _,  task_info = dataloader.load_dataset(dataset_name='variations_mnist_mini')
+    #     X_train, y_train = X[:self.max_train], y[:self.max_train]
+    #     model.fit(X_train, y_train, new_shape=(1, 28, 28))
+    #     try:
+    #         model.predict(X_train)
+    #     except NotFittedError as e:
+    #         print(repr(e))
 
 
 
