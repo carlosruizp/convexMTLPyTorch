@@ -44,7 +44,9 @@ class ConvexMTLPytorchModel(BaseEstimator):
                  specific_modules: dict,
                  epochs: int,
                  lr: float,
-                 batch_size,
+                 batch_size: int,
+                 n_hidden_common: int,
+                 n_hidden_specific: int,
                  verbose: int,
                  lamb: float ,
                  lambda_lr: float,
@@ -69,6 +71,8 @@ class ConvexMTLPytorchModel(BaseEstimator):
         self.epochs = epochs
         self.lr = lr
         self.batch_size = batch_size
+        self.n_hidden_common = n_hidden_common
+        self.n_hidden_specific = n_hidden_specific
         self.verbose = verbose
         self.lamb = lamb
         self.lambda_lr = lambda_lr
@@ -581,9 +585,15 @@ class ConvexMTLPytorchModel(BaseEstimator):
         tasks = list(self.map_dic.values())
         # ic(list(self.map_dic.items()))
         # ic(tasks)
+        if self.n_hidden_specific is None:
+            n_hidden_specific = self.n_hidden_common
+        else:
+            n_hidden_specific = self.n_hidden_specific
         kwargs = {
             "lambda_trainable": self.lambda_trainable,
             "specific_lambda": self.specific_lambda,
+            "n_hidden_common": self.n_hidden_common,
+            "n_hidden_specific": n_hidden_specific,
         }
         opt_kwargs = {}
         for k in self._opt_keys:
@@ -664,7 +674,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
     def score(self, X, y, sample_weight=None):
         pass
 
-    def get_history(self):
+    def get_lamb_history(self):
         if not self.lambda_trainable:
             raise AttributeError()
         return self.lambda_history_
@@ -680,6 +690,8 @@ class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
                 epochs: int=100,
                 lr: float=1e-3,
                 batch_size: int=128,
+                n_hidden_common: int=16,
+                n_hidden_specific: int=16,
                 verbose: int=1,
                 lamb: float = 0.5,
                 weight_decay: float=0.01,
@@ -701,6 +713,8 @@ class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
                          epochs=epochs,
                          lr=lr,
                          batch_size=batch_size,
+                         n_hidden_common=n_hidden_common, 
+                         n_hidden_specific=n_hidden_specific,
                          verbose=verbose,
                          lamb=lamb,
                          weight_decay=weight_decay,
@@ -799,6 +813,8 @@ class ConvexMTLPytorchRegressor(ConvexMTLPytorchModel):
                  epochs: int=100,
                  lr: float=1e-3,
                  batch_size: int=128,
+                 n_hidden_common: int=16,
+                 n_hidden_specific: int=16,
                  verbose: int=1,
                  lamb: float = 0.5,
                  weight_decay: float = 0.01,
@@ -821,6 +837,8 @@ class ConvexMTLPytorchRegressor(ConvexMTLPytorchModel):
                          epochs=epochs,
                          lr=lr,
                          batch_size=batch_size,
+                         n_hidden_common=n_hidden_common, 
+                         n_hidden_specific=n_hidden_specific,
                          verbose=verbose,
                          lamb=lamb,
                          weight_decay=weight_decay,

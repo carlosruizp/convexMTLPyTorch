@@ -1,0 +1,418 @@
+ClearML Task: created new task id=292710565ac440f480131744efe3f605
+ClearML results page: https://app.clear.ml/projects/215c5fdcc712450b9bcebfdbdb129245/experiments/292710565ac440f480131744efe3f605/output/log
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 7.7min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 7.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 6.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 8.3min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.4min
+FIT DONE
+2023-03-22 22:21:48,124 - clearml.frameworks - INFO - Found existing registered model id=d07574d0c8b2453badc72177a86c813b [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/school_cvx_nn_cv0.joblib] reusing it.
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.2min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 8.6min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.2min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.5min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 8.4min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 8.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.5min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 7.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.5min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 5.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.2min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 6.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 6.1min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 8.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.8min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 5.9min
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-22 23:22:41,590 - clearml.frameworks - INFO - Found existing registered model id=4d93cdc5908f4b0bba20d04851ab676e [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/school_cvx_nn_cv1.joblib] reusing it.
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 8.0min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 7.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 5.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 5.7min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 6.9min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 8.5min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 6.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 7.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 5.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 8.8min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.9min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 8.2min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 7.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 5.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 8.9min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 6.7min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 8.0min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 6.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 5.3min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 6.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 7.2min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 6.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 5.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 5.8min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.9min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 6.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 6.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 7.5min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 6.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 5.6min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 5.1min
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-23 00:26:53,912 - clearml.frameworks - INFO - Found existing registered model id=dafeaeb51b534c5faa25e424ac1ce168 [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/school_cvx_nn_cv2.joblib] reusing it.
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 6.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.0min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 6.5min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 7.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 8.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 8.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 6.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 6.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 7.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 7.7min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.9min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 6.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 6.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 8.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.5min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 6.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 8.0min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 6.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 6.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 6.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 6.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 6.1min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 6.5min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 6.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 7.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 5.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 8.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 6.4min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 7.2min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 6.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 7.3min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 7.6min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 5.2min
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-23 01:06:21,499 - clearml.frameworks - INFO - Found existing registered model id=a2bedc13cdcd42bc8f14d92d8726e2a3 [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/school_cvx_nn_cv3.joblib] reusing it.
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 5.0min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 3.9min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 5.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 5.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 3.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 3.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 4.9min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 3.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 3.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 3.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.0min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 4.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 3.8min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.0min
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-23 01:45:17,511 - clearml.frameworks - INFO - Found existing registered model id=cef66f10e98543c6bbfd8dda1a3a9ec8 [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/school_cvx_nn_cv4.joblib] reusing it.
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 4.7min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 4.7min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 5.0min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 3.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 3.9min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.0min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.9min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 3.1min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 3.9min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 4.3min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 3.9min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 3.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.9min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.001; total time= 5.1min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 5.1min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.8min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 4.1min
+ClearML Task: created new task id=714bd266023c4c0c85c44e42f3433a1b
+ClearML results page: https://app.clear.ml/projects/215c5fdcc712450b9bcebfdbdb129245/experiments/714bd266023c4c0c85c44e42f3433a1b/output/log
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.8min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 7.3min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.1min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 7.6min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.4min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.7min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.9min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 7.0min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.2min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.1min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 6.1min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 6.0min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 6.9min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.8min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 8.2min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.6min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.3min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.9min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.1min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.4min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.1min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.4min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.2min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 6.9min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.6min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 6.0min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.001; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END regressor__estim__lambda_lr=0.001, regressor__estim__weight_decay=0.1; total time= 4.2min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.01; total time= 4.7min
+[CV] END regressor__estim__lambda_lr=0.01, regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END regressor__estim__lambda_lr=0.1, regressor__estim__weight_decay=0.1; total time= 3.0min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.9min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.3min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.3min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.8min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 6.0min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.0min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.9min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 6.1min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.2min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.0min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 6.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.2min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.0min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.1min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.2min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.1min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 7.0min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.7min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.4min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.8min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.4min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 8.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 8.7min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 6.5min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.2min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.6min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.5min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.4min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.5min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.7min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.3min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 6.4min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.3min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 6.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.6min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.1min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.4min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.8min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.4min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.2min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 5.9min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 6.4min
+FIT DONE
+ClearML Task: created new task id=d8721ab3028a4171af532376837eb883
+ClearML results page: https://app.clear.ml/projects/215c5fdcc712450b9bcebfdbdb129245/experiments/d8721ab3028a4171af532376837eb883/output/log
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.5min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.6min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.4min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.1min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.5min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.7min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.8min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.8min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.3min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.3min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.7min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.1min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.4min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 5.1min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.5min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.3min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.5min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.8min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.0min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.0min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.6min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.8min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 5.0min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 4.8min
+FIT DONE
+ClearML Task: overwriting (reusing) task id=d4f3faa0fd1b4653a7dd8b7446457640
+ClearML results page: https://app.clear.ml/projects/215c5fdcc712450b9bcebfdbdb129245/experiments/d4f3faa0fd1b4653a7dd8b7446457640/output/log
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.3min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.3min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.1min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.4min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.3min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.1min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.7min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.2min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.8min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.5min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.4min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.0min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.3min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.2min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.5min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.7min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.7min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.6min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.3min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.4min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.3min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.6min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.4min
+[CV] END ...............regressor__estim__weight_decay=0.001; total time= 4.6min
+[CV] END ................regressor__estim__weight_decay=0.01; total time= 4.3min
+[CV] END .................regressor__estim__weight_decay=0.1; total time= 3.2min

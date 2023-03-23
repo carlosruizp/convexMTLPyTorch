@@ -1,0 +1,78 @@
+nohup: no se tendrá en cuenta la entrada
+ic| pipe: Pipeline(steps=[('scaler', StandardScaler()),
+                          ('estim',
+                           ConvexMTLPytorchClassifier(enable_progress_bar=False,
+                                                      epochs=50,
+                                                      lambda_trainable=True))])
+ic| param_grid: {'lambda_lr': [0.001, 0.01, 0.1], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| df_strat:        task label
+              0       0.0     0
+              1       0.0     0
+              2       0.0     0
+              3       0.0     0
+              4       0.0     0
+              ...     ...   ...
+              14815  28.0     0
+              14816  28.0     0
+              14817  28.0     0
+              14818  28.0     0
+              14819  28.0     0
+              
+              [14820 rows x 2 columns]
+ic| fold: 0
+ic| fold: 1
+ic| fold: 2
+ic| fold: 3
+ic| fold: 4
+ic| pipe: Pipeline(steps=[('scaler', StandardScaler()),
+                          ('estim',
+                           ConvexMTLPytorchClassifier(enable_progress_bar=False,
+                                                      epochs=50, lamb=1))])
+ic| param_grid: {'weight_decay': [0.001, 0.01, 0.1]}
+ic| df_strat:        task label
+              0       0.0     0
+              1       0.0     0
+              2       0.0     0
+              3       0.0     0
+              4       0.0     0
+              ...     ...   ...
+              14815  28.0     0
+              14816  28.0     0
+              14817  28.0     0
+              14818  28.0     0
+              14819  28.0     0
+              
+              [14820 rows x 2 columns]
+ic| fold: 0
+ic| fold: 1
+ic| fold: 2
+ic| fold: 3
+ic| fold: 4
+ic| pipe: Pipeline(steps=[('scaler', StandardScaler()),
+                          ('estim',
+                           ConvexMTLPytorchClassifier(enable_progress_bar=False,
+                                                      epochs=50, lamb=0))])
+ic| param_grid: {'weight_decay': [0.001, 0.01, 0.1]}
+ic| df_strat:        task label
+              0       0.0     0
+              1       0.0     0
+              2       0.0     0
+              3       0.0     0
+              4       0.0     0
+              ...     ...   ...
+              14815  28.0     0
+              14816  28.0     0
+              14817  28.0     0
+              14818  28.0     0
+              14819  28.0     0
+              
+              [14820 rows x 2 columns]
+ic| fold: 0
+ic| fold: 1
+ic| fold: 2
+ic| fold: 3
+ic| fold: 4
+ic| df:            accuracy  f1_macro  recall_macro
+        cvx_nn     0.942173  0.573173      0.549208
+        common_nn  0.943252  0.580806      0.556308
+        ind_nn     0.940621  0.617844      0.583602

@@ -22,6 +22,8 @@ class ConvexTorchCombinator(LightningModule):
         {"lr": 1e-3,
          "lambda_lr": 1e-3,
          "weight_decay": 1e-2,
+         "n_hidden_common": 16, 
+         "n_hidden_specific": 16
          })
     def __init__(self,
                  n_features: int,
@@ -30,7 +32,7 @@ class ConvexTorchCombinator(LightningModule):
                  n_channel: int = 1,                 
                  lamb: float=0.5,
                  common_module=None,
-                 specific_modules: dict=None,
+                 specific_modules=None,
                  specific_lambda = False,
                  lambda_trainable = True,
                  loss_fun = 'mse',
@@ -46,6 +48,20 @@ class ConvexTorchCombinator(LightningModule):
         assert (0 <= lamb and lamb <= 1)
         invsigmoid_lamb = invsigmoid(lamb)
         self.specific_lambda = specific_lambda
+
+        self.lambda_lr = kwargs["lambda_lr"]
+        self.lr = kwargs["lr"]
+        self.weight_decay = kwargs["weight_decay"]
+
+        net_common_kwargs = {}
+        if common_module is None or common_module == NeuralNetwork:
+            net_common_kwargs['n_hidden_common'] = kwargs['n_hidden_common']
+
+        net_specific_kwargs = {}
+        if common_module is None or common_module == NeuralNetwork:
+            net_specific_kwargs['n_hidden_specific'] = kwargs['n_hidden_specific']
+
+
         if self.specific_lambda:
             self.lamb_dic = {}
             for t in tasks:
@@ -65,14 +81,11 @@ class ConvexTorchCombinator(LightningModule):
         else:
             if common_module is None:
                 common_module = NeuralNetwork
-            self.common_module_ = common_module(n_features=n_features, n_output=n_output, n_channels=n_channel)
+            self.common_module_ = common_module(n_features=n_features, n_output=n_output, n_channels=n_channel, **net_common_kwargs)
             for t in tasks:
-                self.specific_modules_[t] = common_module(n_features=n_features, n_output=n_output, n_channels=n_channel)
+                self.specific_modules_[t] = common_module(n_features=n_features, n_output=n_output, n_channels=n_channel, **net_specific_kwargs)
 
-        self.lambda_lr = kwargs["lambda_lr"]
-        self.lr = kwargs["lr"]
-        self.weight_decay = kwargs["weight_decay"]
-
+        
     def forward(self, x_data, x_task):
         """
         In the forward function we accept a Tensor of input data and we must return

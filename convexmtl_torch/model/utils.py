@@ -108,9 +108,46 @@ class ConvNet(LightningModule):
 
 
 
-class NeuralNetwork(LightningModule):
+class NeuralNetwork64(LightningModule):
     def __init__(self, n_features, n_hidden=64, n_output=1, loss_fun='mse', **kwargs):
-        super(NeuralNetwork, self).__init__()
+        super().__init__()
+        self.loss_fun = loss_fun
+        self.linear_relu_stack = nn.Sequential(
+            nn.Linear(n_features, n_hidden),
+            nn.ReLU(),
+            nn.Linear(n_hidden, n_hidden),
+            nn.ReLU(),
+            nn.Linear(n_hidden, n_hidden),
+            nn.ReLU(),
+            nn.Linear(n_hidden, n_output),
+        )
+        # # self.double()
+
+    def forward(self, x):
+        logits = self.linear_relu_stack(x)
+        return logits
+
+    def _get_loss_fun(self, **loss_kwargs):
+        switcher = {
+            'mse': nn.MSELoss,
+            'l1': nn.L1Loss,
+            'cross_entropy': nn.CrossEntropyLoss
+        }
+        return switcher.get(self.loss_fun, "Invalid Loss Function.")(**loss_kwargs)
+
+    def configure_optimizers(self):
+        return optim.AdamW(self.parameters())
+
+    def training_step(self, batch, batch_idx, **kwargs):
+        x, y = batch
+        logits = self(x)
+        loss_fun = self._get_loss_fun()
+        loss = loss_fun(logits, y)
+        return loss
+
+class NeuralNetwork(LightningModule):
+    def __init__(self, n_features, n_hidden=32, n_output=1, loss_fun='mse', **kwargs):
+        super().__init__()
         self.loss_fun = loss_fun
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(n_features, n_hidden),

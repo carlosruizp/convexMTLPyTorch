@@ -1,0 +1,418 @@
+ClearML Task: created new task id=66f41954bf6e4b5885ce87ef808855f4
+ClearML results page: https://app.clear.ml/projects/e615da7995484beb8dc19561d609b445/experiments/66f41954bf6e4b5885ce87ef808855f4/output/log
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-22 21:38:20,649 - clearml.frameworks - INFO - Found existing registered model id=3fc2c4921c864b92afe37528df813b54 [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/landmine_cvx_nn_cv0.joblib] reusing it.
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-22 21:56:42,951 - clearml.frameworks - INFO - Found existing registered model id=f0f6c6e66ab14a07b961a419aad40d09 [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/landmine_cvx_nn_cv1.joblib] reusing it.
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-22 22:15:06,872 - clearml.frameworks - INFO - Found existing registered model id=e4986ad977ed438b856ce0a74c91d2b0 [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/landmine_cvx_nn_cv2.joblib] reusing it.
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-22 22:29:34,247 - clearml.frameworks - INFO - Found existing registered model id=b49640fe70704d65a40d349bbba7600d [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/landmine_cvx_nn_cv3.joblib] reusing it.
+Fitting 5 folds for each of 9 candidates, totalling 45 fits
+FIT DONE
+2023-03-22 22:47:56,518 - clearml.frameworks - INFO - Found existing registered model id=daa2cd70082e4fac9bef4c47917213b7 [/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/results/landmine_cvx_nn_cv4.joblib] reusing it.
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.9min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 1.9min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.3min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 1.8min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.2min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.3min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.3min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.6min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.7min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.4min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.5min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 1.5min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.1min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.5min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.7min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.7min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.9min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.3min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.3min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.2min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.3min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.3min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.3min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 1.8min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.7min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.8min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.4min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.6min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 1.8min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 1.6min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.9min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.2min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.9min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.7min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.9min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.9min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.3min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.5min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.3min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.2min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.5min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.7min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.5min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.6min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 1.6min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.8min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ..........................estim__weight_decay=0.001; total time= 4.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.8min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.8min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.3min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.3min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.8min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.8min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.2min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.4min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.2min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.6min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.7min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.5min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.5min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 1.3min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 1.5min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 1.5min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.4min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.3min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.3min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.8min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.3min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.4min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.3min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.5min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.4min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.6min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.6min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 1.8min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 1.8min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.3min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.9min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.2min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 1.9min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.0min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.6min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.0min
+ClearML Task: created new task id=9e47df2ff387495f8ad6c85638d3be64
+ClearML results page: https://app.clear.ml/projects/e615da7995484beb8dc19561d609b445/experiments/9e47df2ff387495f8ad6c85638d3be64/output/log
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.9min
+[CV] END ...........................estim__weight_decay=0.01; total time= 4.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 4.1min
+[CV] END ............................estim__weight_decay=0.1; total time= 4.2min
+[CV] END ..........................estim__weight_decay=0.001; total time= 4.3min
+[CV] END ............................estim__weight_decay=0.1; total time= 4.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.6min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.2min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.6min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.2min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.2min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.1min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.6min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.7min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.8min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 1.6min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 1.5min
+[CV] END ....estim__lambda_lr=0.001, estim__weight_decay=0.1; total time= 1.3min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 1.4min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.3min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 1.4min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 1.4min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.4min
+[CV] END ..estim__lambda_lr=0.001, estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...estim__lambda_lr=0.001, estim__weight_decay=0.01; total time= 2.1min
+[CV] END ...estim__lambda_lr=0.01, estim__weight_decay=0.001; total time= 2.1min
+[CV] END ....estim__lambda_lr=0.01, estim__weight_decay=0.01; total time= 1.9min
+[CV] END .....estim__lambda_lr=0.01, estim__weight_decay=0.1; total time= 2.0min
+[CV] END ....estim__lambda_lr=0.1, estim__weight_decay=0.001; total time= 2.0min
+[CV] END .....estim__lambda_lr=0.1, estim__weight_decay=0.01; total time= 2.0min
+[CV] END ......estim__lambda_lr=0.1, estim__weight_decay=0.1; total time= 1.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.7min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.7min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.2min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.4min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.1min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.1min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.5min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.2min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.1min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.5min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.1min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.2min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.5min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.5min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.9min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.8min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.4min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.1min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.8min
+[CV] END ............................estim__weight_decay=0.1; total time= 4.1min
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.2min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.9min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.2min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.1min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.7min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.5min
+[CV] END ...........................estim__weight_decay=0.01; total time= 4.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.5min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.7min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.1min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.1min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.8min
+[CV] END ..........................estim__weight_decay=0.001; total time= 4.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.9min
+[CV] END ...........................estim__weight_decay=0.01; total time= 4.3min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.6min
+FIT DONE
+ClearML Task: created new task id=3a118199251240b88e652f2ebf41f712
+ClearML results page: https://app.clear.ml/projects/e615da7995484beb8dc19561d609b445/experiments/3a118199251240b88e652f2ebf41f712/output/log
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+FIT DONE
+Fitting 5 folds for each of 3 candidates, totalling 15 fits
+FIT DONE
+ClearML Task: overwriting (reusing) task id=e1f6a220434d452ab60cd5701f415715
+ClearML results page: https://app.clear.ml/projects/e615da7995484beb8dc19561d609b445/experiments/e1f6a220434d452ab60cd5701f415715/output/log
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.0min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.0min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.1min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.8min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.4min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.3min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.5min
+[CV] END ...........................estim__weight_decay=0.01; total time= 4.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.5min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.6min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.6min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.6min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.8min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.9min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.3min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.8min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.3min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.8min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.9min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.9min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.8min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.0min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.5min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.4min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.2min
+[CV] END ............................estim__weight_decay=0.1; total time=  59.7s
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.1min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.2min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.8min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.2min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.6min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.6min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.8min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.4min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.7min
+[CV] END ..........................estim__weight_decay=0.001; total time= 3.0min
+[CV] END ...........................estim__weight_decay=0.01; total time= 4.1min
+[CV] END ............................estim__weight_decay=0.1; total time= 2.8min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.0min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.7min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.6min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.9min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.6min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.4min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.8min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.5min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.4min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.9min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.4min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.3min
+[CV] END ..........................estim__weight_decay=0.001; total time= 2.8min
+[CV] END ...........................estim__weight_decay=0.01; total time= 3.4min
+[CV] END ............................estim__weight_decay=0.1; total time= 3.1min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.8min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.5min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.8min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.7min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.3min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.8min
+[CV] END ...........................estim__weight_decay=0.01; total time= 2.0min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.7min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.7min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.4min
+[CV] END ..........................estim__weight_decay=0.001; total time= 1.3min
+[CV] END ...........................estim__weight_decay=0.01; total time= 1.2min
+[CV] END ............................estim__weight_decay=0.1; total time= 1.1min

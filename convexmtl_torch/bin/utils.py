@@ -79,34 +79,31 @@ def plot_param(gs, param, fold, logscale=False, task=None):
                 (X_axis[best_index], best_score + 0.005))
     if task is not None:
         task.logger.report_matplotlib_figure(title="Parameter {}".format(param), series="GridSearch Analysis", iteration=0, figure=plt)
-
-    # print('l_param:', l_param)
-    if hasattr(gs.best_estimator_, 'regressor_'):
-        best_estim =    gs.best_estimator_.regressor_.steps[1][1]
-    elif hasattr(gs.best_estimator_, 'steps'):
-        best_estim =    gs.best_estimator_.steps[1][1]
-    else:
-        best_estim =    gs.best_estimator_
-    # if hasattr(best_estim, 'lamb_hist_'):
-    #     print(best_estim.lamb_hist_)
-    #     len_hist = len(best_estim.lamb_hist_)
-    #     plt.figure( figsize=(8, 5))
-    #     plt.xticks(range(len_hist), range(len_hist), rotation=45)
-    #     plt.xlabel('iter')
-    #     plt.ylabel('lambda value')
-    #     plt.title('best score: {:.3f}'.format(gs.best_score_))
-    #     if best_estim.slamb:
-    #         for t in best_estim.lamb.keys():
-    #             arr_aux = [best_estim.lamb_hist_[i][t] for i in range(len(best_estim.lamb_hist_))]
-    #             plt.plot(range(len(best_estim.lamb_hist_)), arr_aux, label='task {}'.format(t))
-    #     else:
-    #         plt.plot(range(len(best_estim.lamb_hist_)), best_estim.lamb_hist_)
-    #     pos = filename.find('svm')
-    #     name = filename[:   pos+3]
-    #     plt.savefig(name+'.png')
     
     # plt.legend()
     plt.show(block=False)
     plt.close()
 
     return best_param
+
+def plot_lambda_hist(best_estim, cv_fold, task=None):
+
+    if best_estim.lambda_trainable:
+        len_hist = len(best_estim.get_lamb_history())
+        plt.figure( figsize=(8, 5))
+        plt.xticks(range(len_hist), range(len_hist), rotation=45)
+        plt.xlabel('iter')
+        plt.ylabel('lambda value')
+        if best_estim.specific_lambda:
+            for t in best_estim.lamb.keys():
+                arr_aux = [best_estim.get_lamb_history()[i][t] for i in range(len(best_estim.get_lamb_history()))]
+                plt.plot(range(len(best_estim.get_lamb_history())), arr_aux, label='task {}'.format(t))
+        else:
+            plt.plot(range(len(best_estim.get_lamb_history())), best_estim.get_lamb_history())
+
+    if task is not None:
+        task.logger.report_matplotlib_figure(title="Fold {}. lambda history".format(cv_fold), series="GridSearch Analysis", iteration=0, figure=plt)
+    
+    # plt.legend()
+    plt.show(block=False)
+    plt.close()

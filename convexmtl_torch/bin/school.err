@@ -1,0 +1,104 @@
+nohup: no se tendrá en cuenta la entrada
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                StandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          epochs=50,
+                                                                                          lambda_trainable=True))]),
+                                     transformer=MinMaxScaler())
+ic| param_grid: {'lambda_lr': [0.001, 0.01, 0.1], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 1
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 2
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 3
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 4
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                StandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          epochs=50,
+                                                                                          lamb=1))]),
+                                     transformer=MinMaxScaler())
+ic| param_grid: {'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 1
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 2
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 3
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 4
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                StandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          epochs=50,
+                                                                                          lamb=0))]),
+                                     transformer=MinMaxScaler())
+ic| param_grid: {'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 1
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 2
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 3
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| fold: 4
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
+
+The least populated class in y has only 1 members, which is less than n_splits=5.
+
+ic| df:                 mae         mse
+        cvx_nn     8.614947  122.088764
+        common_nn  8.156343  106.843739
+        ind_nn     8.835468  127.987263
