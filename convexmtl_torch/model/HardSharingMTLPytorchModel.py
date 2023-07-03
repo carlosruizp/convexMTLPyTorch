@@ -18,6 +18,8 @@ from tqdm import trange
 from convexmtl_torch.model.HardSharingTorchCombinator import HardSharingTorchCombinator
 
 from pytorch_lightning import Trainer
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping as LightningEarlyStopping
+
 
 from icecream import ic
 
@@ -38,74 +40,71 @@ class HardSharingMTLPytorchModel(BaseEstimator):
     _opt_keys = {'weight_decay'}
     _loss_keys = {}
 
-    @kwargs_decorator(
-        {"weight_decay": 0,
-        "val_size": 0.1,
-        "min_delta": 1e-3,
-        "patience": 25,
-        "random_state": 42,
-        "early_stopping": True,
-        "lr_scheduler": True})
     def __init__(self,
                  loss_fun: str,
-                 common_module = None,
-                 specific_modules: dict = None,
-                 epochs: int=100,
-                 learning_rate=0.001,
-                 batch_size=128,
-                 verbose: int=1,
-                 **kwargs):
+                 common_module,
+                 epochs: int,
+                 learning_rate: float,
+                 batch_size: int,
+                 verbose: int,
+                 weight_decay: float,
+                 n_hidden_common: int,
+                 val_size: float,
+                 min_delta: float,
+                 patience: int,
+                 random_state: int,
+                 early_stopping: bool,
+                 lr_scheduler: bool,
+                 metrics: list,
+                 train_mode: str,
+                 enable_progress_bar: bool,
+                 log_dir: str,
+                 log_name: str):
                  
         super(HardSharingMTLPytorchModel, self).__init__()
         self.common_module = common_module
-        self.specific_modules = specific_modules
         self.loss_fun = loss_fun
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.batch_size = batch_size
         self.verbose = verbose
-        self.opt_kwargs = {}
-        self.loss_kwargs = {}
-        for k, v in kwargs.items():
-            if k in HardSharingMTLPytorchModel._opt_keys:
-                self.opt_kwargs[k] = v
-            elif k in HardSharingMTLPytorchModel._loss_keys:
-                self.loss_kwargs[k] = v
-        # self.weight_decay = kwargs["weight_decay"]
-        self.val_size = kwargs["val_size"]
-        self.min_delta = kwargs["min_delta"]
-        self.patience = kwargs["patience"]
-        self.metrics = kwargs["metrics"]
-        self._random_state = kwargs["random_state"]
-        self.train_mode = kwargs["train_mode"]
-        self.early_stopping = kwargs["early_stopping"]
-        self.lr_scheduler = kwargs["lr_scheduler"]
+        self.weight_decay = weight_decay
+        self.n_hidden_common = n_hidden_common
+        self.val_size = val_size
+        self.min_delta = min_delta
+        self.patience = patience
+        self.random_state = random_state
+        self.early_stopping = early_stopping
+        self.lr_scheduler = lr_scheduler
+        self.metrics = metrics
+        self.train_mode = train_mode
+        self.enable_progress_bar = enable_progress_bar
+        self.log_dir = log_dir
+        self.log_name = log_name
         
-         
-    
-    
     def predict_(self, X, task_info=-1, **kwargs):
         n, m = X.shape
-
-
         task_col = task_info
         self.unique, self.groups_idx = npi.group_by(X[:, task_col],
                                                     np.arange(n))
         X_data = np.delete(X, task_col, axis=1).astype(float)
         X_task = X[:, task_col]
+
         X_task_map = np.array([self.map_dic[x] for x in X_task])
 
+
         if 'new_shape' in kwargs and kwargs['new_shape'] is not None:
-            ic(X_data.shape)
+            # ic(X_data.shape)
             new_shape = [X_data.shape[0]] + list(kwargs['new_shape'])
             X_data = np.reshape(X_data, tuple(new_shape))
-        else:
+        elif hasattr(self, 'new_shape'):
             if self.new_shape is not None:
                 new_shape = [n] + list(self.new_shape)
                 X_data = np.reshape(X_data, tuple(new_shape))
 
-        X_tensor_data = torch.tensor(X_data)
-        X_tensor_task = torch.tensor(X_task_map)
+        X_tensor_data, X_tensor_task = self.generate_tensors(X_data, X_task_map)
+        # X_tensor_data = torch.tensor(X_data)
+        # X_tensor_task = torch.tensor(X_task_map)
         pred_tensor = self.model(X_tensor_data, X_tensor_task)
         return pred_tensor
 
@@ -126,34 +125,9 @@ class HardSharingMTLPytorchModel(BaseEstimator):
 
         return pred_tensor.detach().numpy()
 
-    def get_opt_(self, **opt_kwargs):
-        # ic([(n, p) for n, p in self.model.named_parameters()])
-        param_list = torch.nn.ParameterList(
-                      [p for n, p in self.model.named_parameters()])
-
-        ic(param_list)
-        ic(self.model)
-        # namedparam_list = [n for n, p in self.model.named_parameters() if p.requires_grad]
-        # ic(namedparam_list)
-        # namedparam_list = [n for n, p in self.model.named_parameters() if p.requires_grad]
-        if hasattr(self.model, 'output_layers'):
-            for name, module in self.model.output_layers.items():
-                param_list.extend(
-                    torch.nn.ParameterList(
-                        [p for n, p in module.named_parameters() if p.requires_grad])
-                )
-
-        ic(param_list)
-
-        opt = optim.AdamW(param_list, **opt_kwargs)#, lr=self.learning_rate)
-        
-        return opt
-
     def get_opt(self):
         assert hasattr(self, 'model')
-        if not hasattr(self, 'opt'):
-             self.opt = self.get_opt_(**self.opt_kwargs)
-        return self.opt
+        return self.model.configure_optimizers()
 
     def get_model(self, X, y):
         if not hasattr(self, 'model'):
@@ -163,12 +137,16 @@ class HardSharingMTLPytorchModel(BaseEstimator):
     def _get_reg(self, **reg_kwargs):
         raise NotImplementedError()
     
-    def _get_loss_fun(self, **loss_kwargs):
+    def _get_loss_fun(self):
         switcher = {
             'mse': nn.MSELoss,
             'l1': nn.L1Loss,
             'cross_entropy': nn.CrossEntropyLoss
         }
+        loss_kwargs = {}
+        for k in self._loss_keys:
+            if hasattr(self, k):
+                loss_kwargs[k] = getattr(self, k)
         return switcher.get(self.loss_fun, "Invalid Loss Function.")(**loss_kwargs)
 
     def _get_metric(self, metric):
@@ -177,11 +155,20 @@ class HardSharingMTLPytorchModel(BaseEstimator):
     
     
     # @profile(output_file='train_lightning_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
-    def _train_lightning(self, train_dl, valid_dl):
-        trainer = Trainer(max_epochs=self.epochs)
+    def _train_lightning(self, train_dl, valid_dl):        
         if self.val:
+            if self.early_stopping:
+                callbacks = [LightningEarlyStopping(monitor="val_loss", mode="min", min_delta=self.min_delta, patience=self.patience, verbose=False)]
+            else:
+                callbacks = []
+            trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar, default_root_dir=self.log_dir, callbacks=callbacks)
             trainer.fit(self.model, train_dl, valid_dl)
         else:
+            if self.early_stopping:
+                callbacks = [LightningEarlyStopping(monitor="loss", mode="min", min_delta=self.min_delta, patience=self.patience, verbose=False)]
+            else:
+                callbacks = []
+            trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar, default_root_dir=self.log_dir, callbacks=callbacks)
             trainer.fit(self.model, train_dl)
 
     # @profile(output_file='train_dataloader_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
@@ -262,7 +249,7 @@ class HardSharingMTLPytorchModel(BaseEstimator):
                 self.model.train()
                 n_train = X_train.shape[0]
                 sample_idx = np.arange(n_train, dtype=int)                        
-                sample_idx = shuffle(sample_idx, random_state=self._random_state)
+                sample_idx = shuffle(sample_idx, random_state=self.random_state)
                 accumulated_loss = 0
                 for batch_slice in gen_batches(n_train, self.batch_size):
                     xb = X_train[sample_idx[batch_slice]]
@@ -334,7 +321,7 @@ class HardSharingMTLPytorchModel(BaseEstimator):
                             
                             break
                     
-                    best_val = self._early_stopping.best_loss
+                        best_val = self._early_stopping.best_loss
 
                     if self.lr_scheduler:
                         self._lr_scheduler(val_loss)
@@ -404,10 +391,10 @@ class HardSharingMTLPytorchModel(BaseEstimator):
         #if not hasattr(self, 'model'):
         self.model = self.create_model(X_data, X_task, y)
         # if not hasattr(self, 'opt'):
-        self.opt = self.get_opt_()
+        self.opt = self.get_opt()
 
         # self.reg_ = self._get_reg()
-        self.loss_fun_ = self._get_loss_fun(**self.loss_kwargs)
+        self.loss_fun_ = self._get_loss_fun()
 
 
         # Generate validation sets
@@ -442,15 +429,17 @@ class HardSharingMTLPytorchModel(BaseEstimator):
                 self.val = True
         
         # Numpy Arrays to Pytorch Tensors
-        X_train, t_train, y_train = self.generate_tensors(X_train, t_train, y_train)
+        X_train, t_train = self.generate_tensors(X_train, t_train)
+        y_train = self.generate_tensors_target(y_train)
         # t_train = t_train.int()
         train_ds = TensorDataset(X_train, t_train, y_train)
         train_dl = DataLoader(train_ds, batch_size=self.batch_size, shuffle=True)
 
         if self.val:
-            X_val, t_val, y_val = self.generate_tensors(X_val, t_val, y_val)
+            X_val, t_val = self.generate_tensors(X_val, t_val)
+            y_val = self.generate_tensors_target(y_val)
             valid_ds = TensorDataset(X_val, t_val, y_val)
-            valid_dl = DataLoader(valid_ds, batch_size=self.batch_size * 2)
+            valid_dl = DataLoader(valid_ds, batch_size=self.batch_size)
 
             if self.early_stopping:
                 self._early_stopping = EarlyStopping(patience=self.patience,
@@ -486,31 +475,30 @@ class HardSharingMTLPytorchModel(BaseEstimator):
         
         return self
 
-    def _create_model(self, input_dim, n_outputs=1, n_channels=1, name=None, **model_kwargs):
-        tasks = self.map_dic.values()
+    def _create_model(self, input_dim, n_output, n_channel=1, name=None, **model_kwargs):
+        tasks = list(self.map_dic.values())
+        # ic(tasks)
+        kwargs = {
+            "n_hidden_common": self.n_hidden_common
+        }
+        opt_kwargs = {}
+        for k in self._opt_keys:
+            if hasattr(self, k):
+                opt_kwargs[k] = getattr(self, k)
+        model_kwargs = {**model_kwargs, **opt_kwargs, **kwargs}
         
         model = HardSharingTorchCombinator(n_features=input_dim,
-                                      n_outputs=n_outputs,
-                                      n_channels=n_channels,
-                                      tasks=tasks,
-                                      common_module=self.common_module,
-                                      **model_kwargs)
-        # model = HardSharingMTLNetwork(n_features=input_dim,
-        #                               n_outputs=n_outputs,
-        #                               n_channels=n_channels,
-        #                               tasks=tasks,
-        #                               common_module=self.common_module,
-        #                               **model_kwargs)        
+                                           n_output=n_output,
+                                           n_channel=n_channel,
+                                           tasks=tasks,
+                                           common_module=self.common_module,
+                                           loss_fun=self.loss_fun,
+                                           **model_kwargs)      
         return model
     
-    def generate_tensors(self, X, t, y):
-        # if t.ndim == 1:
-        #     t_2d = t[:, None]
-        # else:
-        #     t_2d = t
-        X, t, y = map(torch.tensor, (X, t, y))
-        # t = t.int()
-        return X, t, y
+    def generate_tensors(self, *args):
+        tensor_args = map(lambda z: torch.tensor(z).float(), args)
+        return tensor_args
     
     def plot_history(self, val=True, ax=None, include_metrics=False, **kwargs):
         if ax is None:
@@ -545,43 +533,52 @@ class HardSharingMTLPytorchModel(BaseEstimator):
 class HardSharingMTLPytorchClassifier(HardSharingMTLPytorchModel):
     """Multi-layer Perceptron classifier using Keras.
     """
-    @kwargs_decorator(
-        {"weight_decay": 0,
-        "min_delta": 1e-4,
-        "random_state": 42,
-        "metrics": [],
-        "train_mode": "numpy",
-        })
     def __init__(self,
-                loss_fun: str='cross_entropy',
-                common_module=None,
-                specific_modules: dict=None,
-                epochs: int=100,
-                learning_rate: float=0.1,
-                batch_size: int=128,
-                verbose: int=1,
-                weight_decay=0.1,
-                val_size = 0.2,
-                patience = 20,
-                **kwargs):
-        # kwargs = {**kwargs, **{'weight_decay': weight_decay}}
-        self.weight_decay = weight_decay
-        kwargs = {**kwargs, **{"val_size": val_size, "patience": patience}}
-        super(HardSharingMTLPytorchClassifier, self).__init__(common_module=common_module,
-                                                    specific_modules=specific_modules,
-                                                    loss_fun=loss_fun,
-                                                    epochs=epochs,
-                                                    learning_rate=learning_rate,
-                                                    batch_size=batch_size,
-                                                    verbose=verbose,
-                                                    **kwargs)
+                 loss_fun: str='cross_entropy',
+                 common_module=None,
+                 epochs: int=100,
+                 learning_rate: float=0.1,
+                 batch_size: int=128,
+                 verbose: int=1,
+                 weight_decay: float = 0.01,
+                 n_hidden_common: int = 16,
+                 val_size = 0.2,
+                 patience = 20,
+                 min_delta = 1e-5,
+                 random_state = 42,
+                 metrics = [],
+                 train_mode='numpy',
+                 early_stopping=True,
+                 lr_scheduler = True,
+                 enable_progress_bar = True,
+                 log_dir = None,
+                 log_name = None):
+        super().__init__(loss_fun=loss_fun,
+                         common_module=common_module,
+                         epochs=epochs,
+                         learning_rate=learning_rate,
+                         batch_size=batch_size,
+                         verbose=verbose,
+                         weight_decay=weight_decay,
+                         n_hidden_common=n_hidden_common,
+                         val_size=val_size,
+                         patience=patience,
+                         min_delta=min_delta,
+                         random_state=random_state,
+                         metrics=metrics,
+                         train_mode=train_mode,
+                         early_stopping=early_stopping,
+                         lr_scheduler=lr_scheduler,
+                         enable_progress_bar=enable_progress_bar,
+                         log_dir=log_dir,
+                         log_name=log_name)
         
     
     
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
-        y_int = y.astype(int)
+        y_flat = y.astype(int).flatten()
         
-        super(HardSharingMTLPytorchClassifier, self).fit(X, y, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
+        super(HardSharingMTLPytorchClassifier, self).fit(X, y_flat, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
     
     def predict(self, X, task_info=-1, **kwargs):
         """Predict using the multi-layer perceptron classifier
@@ -624,12 +621,9 @@ class HardSharingMTLPytorchClassifier(HardSharingMTLPytorchModel):
     def score(self, X, y, sample_weight=None):
         pass
 
-    def generate_tensors(self, X, t, y):
-        X, t, y = map(torch.tensor, (X, t, y))
-        y = y.long()
-        # t = t.int()
-        return X, t, y
-
+    def generate_tensors_target(self, target):
+        tensor_target = torch.tensor(target).long()
+        return tensor_target
 
     def create_model(self, X_data, X_task, y, task_info=-1, name=None):
         self.task_info = task_info
@@ -638,50 +632,59 @@ class HardSharingMTLPytorchClassifier(HardSharingMTLPytorchModel):
         input_dim = m
 
         unique = np.unique(y)
-        n_outputs = len(unique)
-        ic(n_outputs)
-        if self.new_shape is None:
-            n_channels = 1
+        n_output = len(unique)
+        ic(n_output)
+        if not hasattr(self, 'new_shape') or self.new_shape is None:
+            n_channel = 1
         else:
-            n_channels = self.new_shape[0]
+            n_channel = self.new_shape[0]
 
-        self.model = self._create_model(input_dim, n_outputs=n_outputs, n_channels=n_channels, name=name)
+        self.model = self._create_model(input_dim, n_output=n_output, n_channel=n_channel, name=name)
         return self.model
 
 
 class HardSharingMTLPytorchRegressor(HardSharingMTLPytorchModel):
     """Multi-layer Perceptron Regressor using Keras.
     """
-    @kwargs_decorator(
-        {"weight_decay": 0,
-        "min_delta": 1e-4,
-        "random_state": 42,
-        "metrics": [],
-        "train_mode": "numpy",
-        })
     def __init__(self,
-                loss_fun: str='mse',
-                common_module=None,
-                specific_modules: dict=None,
-                epochs: int=100,
-                learning_rate: float=0.1,
-                batch_size: int=128,
-                verbose: int=1,
-                weight_decay=0.1,
-                val_size = 0.2,
-                patience = 20,
-                **kwargs):
-        # kwargs = {**kwargs, **{'weight_decay': weight_decay}}
-        self.weight_decay = weight_decay
-        kwargs = {**kwargs, **{"val_size": val_size, "patience": patience}}
-        super(HardSharingMTLPytorchRegressor, self).__init__(common_module=common_module,
-                                                    specific_modules=specific_modules,
-                                                    loss_fun=loss_fun,
-                                                    epochs=epochs,
-                                                    learning_rate=learning_rate,
-                                                    batch_size=batch_size,
-                                                    verbose=verbose,
-                                                    **kwargs)
+                 loss_fun: str='mse',
+                 common_module=None,
+                 epochs: int=100,
+                 learning_rate: float=0.1,
+                 batch_size: int=128,
+                 verbose: int=1,
+                 weight_decay: float = 0.01,
+                 n_hidden_common: int = 16,
+                 val_size = 0.2,
+                 patience = 20,
+                 min_delta = 1e-5,
+                 random_state = 42,
+                 metrics = [],
+                 train_mode='numpy',
+                 early_stopping=True,
+                 lr_scheduler = True,
+                 enable_progress_bar = True,
+                 log_dir = None,
+                 log_name = None):
+        super().__init__(loss_fun=loss_fun,
+                         common_module=common_module,
+                         epochs=epochs,
+                         learning_rate=learning_rate,
+                         batch_size=batch_size,
+                         verbose=verbose,
+                         weight_decay=weight_decay,
+                         n_hidden_common=n_hidden_common,
+                         val_size=val_size,
+                         patience=patience,
+                         min_delta=min_delta,
+                         random_state=random_state,
+                         metrics=metrics,
+                         train_mode=train_mode,
+                         early_stopping=early_stopping,
+                         lr_scheduler=lr_scheduler,
+                         enable_progress_bar=enable_progress_bar,
+                         log_dir=log_dir,
+                         log_name=log_name)
 
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
         if y.ndim == 1:
@@ -696,9 +699,16 @@ class HardSharingMTLPytorchRegressor(HardSharingMTLPytorchModel):
         task_col = self.task_info
         n, m = X_data.shape[:2]
         input_dim = m
-        unique = np.unique(X_task)
-        n_outputs = len(unique)
-        self.model = self._create_model(input_dim, n_outputs=n_outputs, name=name)
+        if not hasattr(self, 'new_shape') or self.new_shape is None:
+            n_channel = 1
+        else:
+            n_channel = self.new_shape[0]
+
+        self.model = self._create_model(input_dim, n_output=1, n_channel=n_channel, name=name)
         return self.model
+
+    def generate_tensors_target(self, target):
+        tensor_target = torch.tensor(target).float()
+        return tensor_target
 
                         

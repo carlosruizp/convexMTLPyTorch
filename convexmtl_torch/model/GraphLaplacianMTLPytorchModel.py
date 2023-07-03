@@ -18,12 +18,15 @@ from tqdm import trange
 from convexmtl_torch.model.GraphLaplacianTorchCombinator import GraphLaplacianTorchCombinator
 
 from pytorch_lightning import Trainer
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping as LightningEarlyStopping
+
 
 from icecream import ic
 
 from convexmtl_torch.model.utils import *
 
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 
 class GraphLaplacianMTLPytorchModel(BaseEstimator):
@@ -58,8 +61,11 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                  lr_scheduler,
                  metrics: list,
                  train_mode: str,
+                 enable_progress_bar: bool,
                  nu: float,
                  mu: float,
+                 log_dir: str,
+                 log_name: str
                  ):
                  
         super(GraphLaplacianMTLPytorchModel, self).__init__()
@@ -80,10 +86,13 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
         self.metrics = metrics
         self.random_state = random_state
         self.train_mode = train_mode
+        self.enable_progress_bar = enable_progress_bar
         self.early_stopping = early_stopping
         self.lr_scheduler = lr_scheduler
         self.nu = nu
         self.mu = mu
+        self.log_dir = log_dir
+        self.log_name = log_name
 
         self.opt_kwargs = {}
         self.loss_kwargs = {}
@@ -233,11 +242,20 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
     
     
     # @profile(output_file='train_lightning_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
-    def _train_lightning(self, train_dl, valid_dl):
-        trainer = Trainer(max_epochs=self.epochs)
+    def _train_lightning(self, train_dl, valid_dl):        
         if self.val:
+            if self.early_stopping:
+                callbacks = [LightningEarlyStopping(monitor="val_loss_full", mode="min", min_delta=self.min_delta, patience=self.patience, verbose=False)]
+            else:
+                callbacks = []
+            trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar, default_root_dir=self.log_dir, callbacks=callbacks)
             trainer.fit(self.model, train_dl, valid_dl)
         else:
+            if self.early_stopping:
+                callbacks = [LightningEarlyStopping(monitor="loss_full", mode="min", min_delta=self.min_delta, patience=self.patience, verbose=False)]
+            else:
+                callbacks = []
+            trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar, default_root_dir=self.log_dir, callbacks=callbacks)
             trainer.fit(self.model, train_dl)
 
     # @profile(output_file='train_dataloader_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
@@ -327,8 +345,9 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                     xb = X_train[sample_idx[batch_slice]]
                     tb = t_train[sample_idx[batch_slice]]
                     yb = y_train[sample_idx[batch_slice]]
-                    pred = self.model(xb, tb)
-                    loss = self.loss_fun_(pred, yb)
+                    loss = self.model.training_step((xb, tb, yb), sample_idx[batch_slice])
+                    # pred = self.model(xb, tb)
+                    # loss = self.loss_fun_(pred, yb)
                     accumulated_loss += loss
                     loss.backward()
                     self.opt.step()
@@ -345,19 +364,10 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                     with torch.no_grad():
                         val_loss = sum(self.loss_fun_(self.model(X_val[sample_idx[batch_slice]], t_val[sample_idx[batch_slice]]), y_val[sample_idx[batch_slice]]) 
                                         for batch_slice in gen_batches(n_val, self.batch_size))
-                    
-                    # if val_loss >= best_val - self.min_delta: # old_val_loss - self.min_delta:
-                    #     early_stopping_count += 1
-                    # else:
-                    #     early_stopping_count = 0
 
-                    # old_val_loss = val_loss
-
-                    # if self.patience > 0 and early_stopping_count >= self.patience:
-                    #     break                   
-
-                    # if val_loss <= best_val:
-                    #     best_val = val_loss  
+                    if self.val:
+                        if val_loss <= best_val:
+                            best_val = val_loss  
 
                     if self.early_stopping:                    
                         self._early_stopping(val_loss, epoch, self.model, self.opt, self.loss_fun_)
@@ -380,19 +390,21 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                             # print("Model's state_dict:")
                             # for param_tensor in self.model.state_dict():
                             #     print(param_tensor, "\t", self.model.state_dict()[param_tensor])
-                            
+                            best_val = self._early_stopping.best_loss
                             break
                     
-                    best_val = self._early_stopping.best_loss
+                        
 
                     if self.lr_scheduler:
                         self._lr_scheduler(val_loss)
                           
 
                 # store loss and metrics history
-                self.history['loss'].append(tr_loss.detach().item())
+                tr_loss_item = tr_loss.detach().item()                
+                self.history['loss'].append(tr_loss_item)
                 if self.val:
-                    self.history['val_loss'].append(val_loss.detach().item())
+                    val_loss_item = val_loss.detach().item()
+                    self.history['val_loss'].append(val_loss_item)
 
                 
                 # for m in self.metrics:
@@ -402,14 +414,16 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                 #     if self.val:
                 #         self.history['val_{}'.format(m)].append(scoring_fun(y_val_, pred_val))
 
-                tr_text = f"{tr_loss:4.2f}({best_tr:4.2f})"
+                best_tr_item = best_tr.detach().item()
+                best_val_item = best_val # .detach().item()
+                tr_text = f"{tr_loss_item:4.2f}({best_tr_item:4.2f})"
                 if self.val:
-                    val_text = f"{val_loss:4.2f}({best_val:4.2f})"
+                    val_text = f"{val_loss_item:4.2f}({best_val_item:4.2f})"
                 else:
                     val_text = "N/A"
 
                 tri.set_description(
-                        f"Loss: {tr_loss:6.4e}, Tr:{tr_text}, V:{val_text}")
+                        f"Loss: {tr_loss_item:6.4e}, Tr:{tr_text}, V:{val_text}")
 
             self.tot_epochs = epoch + 1
 
@@ -511,7 +525,7 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
             X_val, t_val = self.generate_tensors(X_val, t_val)
             y_val = self.generate_tensors_target(y_val)
             valid_ds = TensorDataset(X_val, t_val, y_val)
-            valid_dl = DataLoader(valid_ds, batch_size=self.batch_size * 2)
+            valid_dl = DataLoader(valid_ds, batch_size=self.batch_size)
 
             if self.early_stopping:
                 self._early_stopping = EarlyStopping(patience=self.patience,
@@ -556,10 +570,10 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
         
         return self
 
-    def _create_model(self, input_dim, n_output=1, n_channel=1, name=None, **model_kwargs):
+    def _create_model(self, input_dim, n_output, n_channel=1, name=None, **model_kwargs):
         tasks = list(self.map_dic.values())
         # ic(list(self.map_dic.items()))
-        # ic(tasks)
+        ic(n_output)
         kwargs = {
             "adj_trainable": self.adj_trainable,
         }
@@ -573,6 +587,7 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
                                               specific_modules=self.specific_modules,
                                               nu=self.nu,
                                               mu=self.mu,
+                                              loss_fun=self.loss_fun,
                                               **model_kwargs)        
         return model
     
@@ -609,6 +624,23 @@ class GraphLaplacianMTLPytorchModel(BaseEstimator):
         plt.legend()
         return ax
 
+    
+    def get_adjmatrix(self):
+        adjMatrix = self.model.get_adjMatrix()
+        return adjMatrix
+    
+    
+    def plot_adjmatrix(self, ax=None):
+        if ax is None:
+            plt.figure(figsize=(10, 8))
+            ax = plt.gca()
+
+        adjMatrix = self.model.get_adjMatrix()
+        tasks = self.map_dic.keys() 
+        fig = sns.heatmap(adjMatrix, xticklabels=tasks, yticklabels=tasks, vmin=0, vmax=1, ax=ax)
+        return fig
+    
+    
     def score(self, X, y, sample_weight=None):
         raise NotImplementedError
 
@@ -634,14 +666,17 @@ class GraphLaplacianMTLPytorchClassifier(GraphLaplacianMTLPytorchModel):
                 patience = 20,
                 adj_trainable = False,
                 adj_lr = 1e-3,
-                min_delta = 1e-4,
+                min_delta = 1e-5,
                 random_state = 42,
                 metrics = [],
                 train_mode='numpy',
+                enable_progress_bar = True,
                 early_stopping=True,
                 lr_scheduler = True,
                 nu=1,
                 mu=1e-3,
+                log_dir = None,
+                log_name = None
                 ):
         super().__init__(loss_fun=loss_fun,
                          common_module=common_module,
@@ -660,17 +695,21 @@ class GraphLaplacianMTLPytorchClassifier(GraphLaplacianMTLPytorchModel):
                          random_state=random_state,
                          metrics=metrics,
                          train_mode=train_mode,
+                         enable_progress_bar=enable_progress_bar,
                          early_stopping=early_stopping,
                          lr_scheduler=lr_scheduler,
                          nu=nu,
-                         mu=mu)
+                         mu=mu,
+                         log_dir=log_dir,
+                         log_name=log_name)
         
     
     
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
-        y_int = y.astype(int)
+        y_flat = y.astype(int).flatten()
+        ic(y_flat)
         
-        super(GraphLaplacianMTLPytorchClassifier, self).fit(X, y, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
+        super(GraphLaplacianMTLPytorchClassifier, self).fit(X, y_flat, task_info, verbose, X_val, y_val, X_test, y_test, **kwargs)
     
     def predict(self, X, task_info=-1, **kwargs):
         """Predict using the multi-layer perceptron classifier
@@ -716,6 +755,7 @@ class GraphLaplacianMTLPytorchClassifier(GraphLaplacianMTLPytorchModel):
         return tensor_target
 
     def create_model(self, X_data, X_task, y, task_info=-1, name=None):
+        print('CREATE MODEL')
         self.task_info = task_info
         task_col = self.task_info
         n, m = X_data.shape[:2]
@@ -723,10 +763,12 @@ class GraphLaplacianMTLPytorchClassifier(GraphLaplacianMTLPytorchModel):
 
         unique = np.unique(y)
         n_outputs = len(unique)
-        if self.new_shape is None:
+        if not hasattr(self, 'new_shape') or self.new_shape is None:
             n_channel = 1
         else:
             n_channel = self.new_shape[0]
+
+        ic(n_outputs)
 
         self.model = self._create_model(input_dim, n_output=n_outputs, n_channel=n_channel, name=name)
         return self.model
@@ -749,14 +791,17 @@ class GraphLaplacianMTLPytorchRegressor(GraphLaplacianMTLPytorchModel):
                 patience = 20,
                 adj_trainable = False,
                 adj_lr = 1e-3,
-                min_delta = 1e-4,
+                min_delta = 1e-5,
                 random_state = 42,
                 metrics = [],
                 train_mode='numpy',
+                enable_progress_bar=True,
                 early_stopping=True,
                 lr_scheduler = True,
                 nu=1,
                 mu=1e-3,
+                log_dir = None,
+                log_name = None
                 ):
         super().__init__(loss_fun=loss_fun,
                          common_module=common_module,
@@ -775,10 +820,13 @@ class GraphLaplacianMTLPytorchRegressor(GraphLaplacianMTLPytorchModel):
                          random_state=random_state,
                          metrics=metrics,
                          train_mode=train_mode,
+                         enable_progress_bar=enable_progress_bar,
                          early_stopping=early_stopping,
                          lr_scheduler=lr_scheduler,
                          nu=nu,
-                         mu=mu)
+                         mu=mu,
+                         log_dir=log_dir,
+                         log_name=log_name)
 
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
         if y.ndim == 1:
@@ -793,7 +841,13 @@ class GraphLaplacianMTLPytorchRegressor(GraphLaplacianMTLPytorchModel):
         task_col = self.task_info
         n, m = X_data.shape[:2]
         input_dim = m
-        self.model = self._create_model(input_dim, n_output=1, name=name)
+
+        if not hasattr(self, 'new_shape') or self.new_shape is None:
+            n_channel = 1
+        else:
+            n_channel = self.new_shape[0]
+
+        self.model = self._create_model(input_dim, n_output=1, n_channel=n_channel, name=name)
         return self.model
     
     def generate_tensors_target(self, target):

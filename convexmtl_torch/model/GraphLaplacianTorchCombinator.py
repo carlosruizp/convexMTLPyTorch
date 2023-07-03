@@ -34,7 +34,7 @@ import seaborn as sns
 
 
 class GraphLaplacianMTLNetwork(LightningModule):
-    def __init__(self, n_features, n_hidden=64, n_outputs=1, **kwargs):
+    def __init__(self, n_features, n_hidden=64, n_output=1, **kwargs):
         super(GraphLaplacianMTLNetwork, self).__init__()
         # self.flatten = nn.Flatten()
         self.linear_relu_stack = nn.Sequential(
@@ -45,8 +45,8 @@ class GraphLaplacianMTLNetwork(LightningModule):
             nn.Linear(n_hidden, n_hidden),
             nn.ReLU(),
         )
-        self.n_outputs = n_outputs
-        self.output_layers = {i: nn.Linear(n_hidden, 1).double() for i in range(n_outputs)}
+        self.n_output = n_output
+        self.output_layers = {i: nn.Linear(n_hidden, 1).double() for i in range(n_output)}
         # self.double()
 
     def forward(self, x, t):
@@ -68,15 +68,15 @@ class GraphLaplacianMTLNetwork(LightningModule):
 class GraphLaplacianConvNet(LightningModule):
     # L1 ImgIn shape=(?, 28, 28, 1)
     # Conv -> (?, 28, 28, 10)
-    def __init__(self, n_channels=1, n_outputs=1, **kwargs):
+    def __init__(self, n_channels=1, n_output=1, **kwargs):
         super(GraphLaplacianConvNet, self).__init__()
         self.conv1 = nn.Conv2d(n_channels, 10, kernel_size=5)
         self.conv2 = nn.Conv2d(10, 20, kernel_size=5)
         self.conv2_drop = nn.Dropout2d()
         self.fc1 = nn.Linear(320, 50)
-        # self.fc2 = nn.Linear(50, n_outputs)
-        self.n_outputs = n_outputs
-        self.output_layers = {i: nn.Linear(50, 1).double() for i in range(n_outputs)}
+        # self.fc2 = nn.Linear(50, n_output)
+        self.n_output = n_output
+        self.output_layers = {i: nn.Linear(50, 1).double() for i in range(n_output)}
 
         # self.double()
 
@@ -108,14 +108,14 @@ class GraphLaplacianTorchCombinator(LightningModule):
         {
         "lr": 1e-3,
         "adj_lr": 1e-2,
-        "log_matrix_freq": 50,
+        "log_matrix_freq": 10,
         "weight_decay": 1e-2,
         }
         )
     def __init__(self,
                  n_features: int,
                  tasks: Union[list, np.ndarray],
-                 n_outputs: int = 1,
+                 n_output: int = 1,
                  n_channel: int = 1,
                  n_last_hidden: int = 64,
                  common_module=None,
@@ -137,14 +137,20 @@ class GraphLaplacianTorchCombinator(LightningModule):
         self.adj_trainable = adj_trainable
         
 
-        self.n_outputs = n_outputs
-        self.output_layers = {r: nn.Linear(n_last_hidden, n_outputs).float() for r in tasks}
+        self.n_output = n_output
 
-        adj_ = {r: {s: np.log(1e-9) if r!=s else np.log(1) for s in tasks} for r in tasks}
+        adj_ = {r: {s: np.log(1) if r!=s else np.log(1) for s in tasks} for r in tasks}
         self.adj = {r: {s: None for s in tasks} for r in tasks}
+        if loss_fun == 'mse': # TODO: change for if regression
+            n_output_ = n_output
+        else:
+            n_output_ = 1
+
+        self.output_layers = {r: nn.Linear(n_last_hidden, n_output).float() for r in tasks}
+
         for r in tasks:
             for s in tasks:
-                self.adj[r][s] = torch.nn.Parameter(torch.full([n_outputs, n_outputs], adj_[r][s], dtype=torch.float),
+                self.adj[r][s] = torch.nn.Parameter(torch.full([n_output_, n_output_], adj_[r][s], dtype=torch.float),
                                                      requires_grad=self.adj_trainable)
        
         if tasks is None:
@@ -167,13 +173,8 @@ class GraphLaplacianTorchCombinator(LightningModule):
         a Tensor of output data. We can use Modules defined in the constructor as
         well as arbitrary operators on Tensors.
         """
-        # x_data = x[:, :-1]
-        # x_task = x[:, -1]
         feat = self.common_module_(x_data).float()
-        zero_torch = torch.tensor(0).float()
-        # ic(zero_torch.dtype)
-        # ic(self.output_layers[0](feat).float().dtype)
-        logits = zero_torch * self.output_layers[0](feat).float()
+        logits = torch.zeros((x_data.shape[0], self.n_output))
 
         for k, module in self.output_layers.items():
             k_idx = (x_task==k).flatten().bool()
@@ -245,10 +246,9 @@ class GraphLaplacianTorchCombinator(LightningModule):
                 prod_rr = w_r @ w_r.T 
                 prod_ss = w_s @ w_s.T 
                 prod_rs = w_r @ w_s.T 
-                dist_rs = (prod_rr + prod_ss - 2 * prod_rs)
+                dist_rs = torch.sum(torch.diagonal(prod_rr + prod_ss - 2 * prod_rs))
                 self.log('dist_({},{})'.format(r, s), dist_rs, on_step=False, on_epoch=True)
                 self.log('A_rs * dist_({},{})'.format(r, s), A_rs * dist_rs, on_step=False, on_epoch=True)
-                # ic(self.adj[r][s])
                 entropy_r += (-A_rs * torch.log(A_rs))
                 entropy_r_dic[s] = (-A_rs * torch.log(A_rs))
                 lap_reg += torch.sum(A_rs * dist_rs)
@@ -264,6 +264,49 @@ class GraphLaplacianTorchCombinator(LightningModule):
         self.log('nu*lap_reg-mu*entr', (self.nu * lap_reg)/T**2 - (self.mu * entropy)/T**2, on_step=False, on_epoch=True)
 
         self.log('loss+nu*lap_reg-mu*entr', loss + (self.nu * lap_reg)/T**2 - (self.mu * entropy)/T**2, on_step=False, on_epoch=True)
+        self.log('loss_full', loss + (self.nu * lap_reg)/T**2 - (self.mu * entropy)/T**2, on_step=False, on_epoch=True)
+       
+        return loss + (self.nu * lap_reg)/T**2 - (self.mu * entropy)/T**2
+
+    def validation_step(self, batch, batch_idx, **kwargs):
+        x, t, y = batch
+        logits = self(x, t)
+        loss_fun = self._get_loss_fun()
+        loss = loss_fun(logits, y)
+
+        lap_reg = 0
+        entropy = 0
+
+        self.entropy = {}
+        for r, module_r in self.output_layers.items():
+            w_r = module_r.weight
+            sum_r = torch.sum(torch.tensor([torch.exp(self.adj[r][s]) for s in self.tasks]))
+            entropy_r = 0# torch.sum(-softmax_r * torch.log(softmax_r))
+            entropy_r_dic = {}
+            for j, (s, module_s) in enumerate(self.output_layers.items()):
+                A_rs = torch.exp(self.adj[r][s])/sum_r
+                # ic(A_rs)
+                self.log('A_({},{})'.format(r, s), A_rs, on_step=False, on_epoch=True)
+                w_s = module_s.weight
+                # ic(s)
+                prod_rr = w_r @ w_r.T 
+                prod_ss = w_s @ w_s.T 
+                prod_rs = w_r @ w_s.T 
+                dist_rs = torch.sum(torch.diagonal(prod_rr + prod_ss - 2 * prod_rs))
+                self.log('dist_({},{})'.format(r, s), dist_rs, on_step=False, on_epoch=True)
+                self.log('A_rs * dist_({},{})'.format(r, s), A_rs * dist_rs, on_step=False, on_epoch=True)
+                entropy_r += (-A_rs * torch.log(A_rs))
+                entropy_r_dic[s] = (-A_rs * torch.log(A_rs))
+                lap_reg += torch.sum(A_rs * dist_rs)
+                # ic(lap_reg)
+            self.log('entropy {}'.format(r), entropy_r, on_step=False, on_epoch=True)
+            entropy += entropy_r
+            self.entropy[r] = entropy_r_dic
+
+        T = len(self.tasks)
+        self.log('val_loss', loss, on_step=False, on_epoch=True)
+
+        self.log('val_loss_full', loss + (self.nu * lap_reg)/T**2 - (self.mu * entropy)/T**2, on_step=False, on_epoch=True)
        
         return loss + (self.nu * lap_reg)/T**2 - (self.mu * entropy)/T**2
     

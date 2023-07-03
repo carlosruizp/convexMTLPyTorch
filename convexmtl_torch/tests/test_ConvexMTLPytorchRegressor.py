@@ -23,7 +23,6 @@ class TestConvexMTLPytorchRegressor(unittest.TestCase):
     def setUp(self):
         
         self.module = NeuralNetwork
-        self.specific_modules = {0: NeuralNetwork, 1: NeuralNetwork}
         self.specific_lambda = True
         self.epochs = 3
         self.batch_size = 32

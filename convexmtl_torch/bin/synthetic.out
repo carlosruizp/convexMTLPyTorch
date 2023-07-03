@@ -1,0 +1,154 @@
+ic| problem_: 'clustersC'
+ic| suffix_: 'reg'
+ic| tasks: [0, 1, 2, 3, 10, 11, 12, 13, 20, 21, 22, 23, 24]
+ic| pipe: Pipeline(steps=[('scaler', MTLStandardScaler()),
+                          ('estim',
+                           HardSharingMTLPytorchRegressor(enable_progress_bar=False,
+                                                          epochs=1000, patience=50))])
+ic| estim_name: 'hs_nn_32'
+ic| param_grid: {'early_stopping': [True], 'weight_decay': [1e-06, 1e-05, 0.0001, 0.001]}
+ic| param_grid: {'early_stopping': [True], 'weight_decay': [1e-06, 1e-05, 0.0001, 0.001]}
+ic| fold: 0
+ic| retrain: False
+ic| file_name: 'results/clustersC-reg__hs_nn_32__cv0.joblib'
+ic| task: None
+ic| task: None
+ic| X_data.shape: (520, 1)
+ic| n_output: 1
+GPU available: True (cuda), used: False
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/setup.py:176: PossibleUserWarning: GPU available but not used. Set `accelerator` and `devices` using `Trainer(accelerator='gpu', devices=2)`.
+  rank_zero_warn(
+
+  | Name           | Type                   | Params
+----------------------------------------------------------
+0 | common_module_ | NeuralNetworkFeatLearn | 8.4 K 
+----------------------------------------------------------
+8.4 K     Trainable params
+0         Non-trainable params
+8.4 K     Total params
+0.034     Total estimated model params size (MB)
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, train_dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py:1609: PossibleUserWarning: The number of training batches (4) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+  rank_zero_warn(
+ic| fold: 1
+ic| retrain: False
+ic| file_name: 'results/clustersC-reg__hs_nn_32__cv1.joblib'
+ic| task: None
+ic| task: None
+ic| X_data.shape: (520, 1)
+ic| n_output: 1
+GPU available: True (cuda), used: False
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/setup.py:176: PossibleUserWarning: GPU available but not used. Set `accelerator` and `devices` using `Trainer(accelerator='gpu', devices=2)`.
+  rank_zero_warn(
+
+  | Name           | Type                   | Params
+----------------------------------------------------------
+0 | common_module_ | NeuralNetworkFeatLearn | 8.4 K 
+----------------------------------------------------------
+8.4 K     Trainable params
+0         Non-trainable params
+8.4 K     Total params
+0.034     Total estimated model params size (MB)
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, train_dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py:1609: PossibleUserWarning: The number of training batches (4) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+  rank_zero_warn(
+ic| fold: 2
+ic| retrain: False
+ic| file_name: 'results/clustersC-reg__hs_nn_32__cv2.joblib'
+ic| task: None
+ic| task: None
+ic| X_data.shape: (520, 1)
+ic| n_output: 1
+GPU available: True (cuda), used: False
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/setup.py:176: PossibleUserWarning: GPU available but not used. Set `accelerator` and `devices` using `Trainer(accelerator='gpu', devices=2)`.
+  rank_zero_warn(
+
+  | Name           | Type                   | Params
+----------------------------------------------------------
+0 | common_module_ | NeuralNetworkFeatLearn | 8.4 K 
+----------------------------------------------------------
+8.4 K     Trainable params
+0         Non-trainable params
+8.4 K     Total params
+0.034     Total estimated model params size (MB)
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, train_dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py:1609: PossibleUserWarning: The number of training batches (4) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+  rank_zero_warn(
+ic| fold: 3
+ic| retrain: False
+ic| file_name: 'results/clustersC-reg__hs_nn_32__cv3.joblib'
+ic| task: None
+ic| task: None
+ic| X_data.shape: (520, 1)
+ic| n_output: 1
+GPU available: True (cuda), used: False
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/setup.py:176: PossibleUserWarning: GPU available but not used. Set `accelerator` and `devices` using `Trainer(accelerator='gpu', devices=2)`.
+  rank_zero_warn(
+
+  | Name           | Type                   | Params
+----------------------------------------------------------
+0 | common_module_ | NeuralNetworkFeatLearn | 8.4 K 
+----------------------------------------------------------
+8.4 K     Trainable params
+0         Non-trainable params
+8.4 K     Total params
+0.034     Total estimated model params size (MB)
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, train_dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py:1609: PossibleUserWarning: The number of training batches (4) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+  rank_zero_warn(
+ic| fold: 4
+ic| retrain: False
+ic| file_name: 'results/clustersC-reg__hs_nn_32__cv4.joblib'
+ic| task: None
+ic| task: None
+ic| X_data.shape: (520, 1)
+ic| n_output: 1
+GPU available: True (cuda), used: False
+TPU available: False, using: 0 TPU cores
+IPU available: False, using: 0 IPUs
+HPU available: False, using: 0 HPUs
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/setup.py:176: PossibleUserWarning: GPU available but not used. Set `accelerator` and `devices` using `Trainer(accelerator='gpu', devices=2)`.
+  rank_zero_warn(
+
+  | Name           | Type                   | Params
+----------------------------------------------------------
+0 | common_module_ | NeuralNetworkFeatLearn | 8.4 K 
+----------------------------------------------------------
+8.4 K     Trainable params
+0         Non-trainable params
+8.4 K     Total params
+0.034     Total estimated model params size (MB)
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, val_dataloader 0, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/connectors/data_connector.py:224: PossibleUserWarning: The dataloader, train_dataloader, does not have many workers which may be a bottleneck. Consider increasing the value of the `num_workers` argument` (try 40 which is the number of cpus on this machine) in the `DataLoader` init to improve performance.
+  rank_zero_warn(
+/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/pytorch_lightning/trainer/trainer.py:1609: PossibleUserWarning: The number of training batches (4) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+  rank_zero_warn(
+ic| df:                mae       mse
+        hs_nn_32  0.103294  0.017208
+Init Synth
+TASK FUNCTIONS

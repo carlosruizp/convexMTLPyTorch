@@ -1,12 +1,95 @@
 import numpy as np 
 import matplotlib.pyplot as plt
 
+from sklearn.model_selection import GridSearchCV
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+from sklearn.metrics import make_scorer, mean_absolute_error, mean_squared_error
+from sklearn.base import clone
+from sklearn.pipeline import Pipeline
+from sklearn.compose import TransformedTargetRegressor
+import joblib
+
 from icecream import ic
 
 import pandas as pd
 
+import os
 
-def plot_param(gs, param, fold, logscale=False, task=None):
+DATA_DIR = '_data'
+RESULTS_DIR = 'results'
+PREDICTIONS_DIR = 'predictions'
+MAX_EPOCHS = 25
+CLEARML = False
+N_JOBS = 6
+N_TEST_REPEAT = 5
+
+
+
+
+
+def generate_gridsearch(estim, cv, param_grid, scorer_val, n_jobs=N_JOBS, verbose=2):
+    
+    prefix = ''
+    if isinstance(estim, TransformedTargetRegressor):
+        prefix += 'regressor__'
+        model = estim.regressor
+    else:
+        model = estim
+
+    if isinstance(model, Pipeline):
+        prefix += 'estim__'
+
+    pref_param_grid_ = {'{}{}'.format(prefix, k): v for k, v in param_grid.items()}
+    gs = GridSearchCV(estimator=estim, param_grid=pref_param_grid_, scoring=scorer_val,
+                        n_jobs=n_jobs, cv=cv, verbose=verbose, refit=False, return_train_score=True)
+    return gs
+
+
+def generate_pipeline(estim, data_scaler, transformer=None):
+    if data_scaler is not None:
+        pipe = Pipeline(steps=[('scaler', data_scaler), ('estim', estim)])
+    else:
+        pipe = estim
+
+    if transformer is not None:
+        pipe = TransformedTargetRegressor(regressor=pipe,
+                                             transformer=transformer)
+
+    return pipe
+
+
+def load_cv_results(estim_name, problem_name, cv_fold, results_dir, retrain=False):
+    file_name = '{}/{}__{}__cv{}.joblib'.format(results_dir, problem_name, estim_name, cv_fold)
+    ic(retrain)
+    ic(file_name)
+    if retrain:
+        return None
+    if not os.path.exists(file_name):
+        return None
+    cv_estim = joblib.load(file_name)
+    return cv_estim
+
+
+def analyze_gs(gs, problem_name, model_name, fold, task=None):
+    params = [p.split('__')[-1] for p in gs.best_params_.keys()]
+    linear_scale = ['lamb', 'early_stopping']
+    for p in params:
+        if p in linear_scale:
+            plot_param(gs, p, fold, logscale=False, problem_name=problem_name, model_name=model_name)
+        else:
+            plot_param(gs, p, fold, logscale=True, problem_name=problem_name, model_name=model_name)
+
+def save_cv_results(cv_estim, estim_name, problem_name, cv_fold, results_dir):
+    file_name = '{}/{}__{}__cv{}.joblib'.format(results_dir, problem_name, estim_name, cv_fold)
+    joblib.dump(cv_estim, file_name)
+
+
+
+
+
+
+
+def plot_param(gs, param, fold, logscale=False, task=None, problem_name=None, model_name=None):
     params_l = np.array(list(gs.best_params_.keys()))
     find_param = np.array([param in p for p in params_l])
     if (find_param == False).all():
@@ -42,7 +125,8 @@ def plot_param(gs, param, fold, logscale=False, task=None):
     plt.figure( figsize=(8, 5))
 
     # plt.subplot(1, 3, 1)
-    plt.title('Fold {}. param {}: {:.2f}'.format(fold, param, best_param))
+    title = 'Fold {}. param {}: {:.3f}'.format(fold, param, best_param)
+    plt.title(title)
 
     plt.xticks(l_param, np.round(l_param, 2), rotation=45)
     plt.xlabel(param)
@@ -77,16 +161,24 @@ def plot_param(gs, param, fold, logscale=False, task=None):
     # # Annotate the best score for that scorer
     plt.annotate("%0.2f" % best_score,
                 (X_axis[best_index], best_score + 0.005))
+    
+    ic(task)
+    title = 'Fold {}. param {}'.format(fold, param)
     if task is not None:
         task.logger.report_matplotlib_figure(title="Parameter {}".format(param), series="GridSearch Analysis", iteration=0, figure=plt)
+        plt.show(block=False)
+        plt.close()
+    else:
+        plots_dir = 'plots/{}/{}'.format(problem_name, model_name)
+        os.makedirs(plots_dir, exist_ok=True)
+        plt.savefig('{}/{}.png'.format(plots_dir, title))
     
     # plt.legend()
-    plt.show(block=False)
-    plt.close()
+    
 
     return best_param
 
-def plot_lambda_hist(best_estim, cv_fold, task=None):
+def plot_lambda_hist(best_estim, cv_fold, task=None, problem_name=None, model_name=None):
 
     if best_estim.lambda_trainable:
         len_hist = len(best_estim.get_lamb_history())
@@ -101,9 +193,16 @@ def plot_lambda_hist(best_estim, cv_fold, task=None):
         else:
             plt.plot(range(len(best_estim.get_lamb_history())), best_estim.get_lamb_history())
 
+    title = "Fold {}. lambda history".format(cv_fold)
     if task is not None:
-        task.logger.report_matplotlib_figure(title="Fold {}. lambda history".format(cv_fold), series="GridSearch Analysis", iteration=0, figure=plt)
+        task.logger.report_matplotlib_figure(title=title, series="GridSearch Analysis", iteration=0, figure=plt)
+        plt.show(block=False)
+        plt.close()
+    else:
+        plots_dir = 'plots/{}/{}'.format(problem_name, model_name)
+        os.makedirs(plots_dir, exist_ok=True)
+        plt.savefig('{}/{}.png'.format(plots_dir, title))
+
     
     # plt.legend()
-    plt.show(block=False)
-    plt.close()
+    

@@ -18,6 +18,7 @@ from tqdm import trange
 from convexmtl_torch.model.ConvexTorchCombinator import ConvexTorchCombinator
 
 from pytorch_lightning import Trainer
+from pytorch_lightning.callbacks.early_stopping import EarlyStopping as LightningEarlyStopping
 
 from icecream import ic
 
@@ -61,7 +62,9 @@ class ConvexMTLPytorchModel(BaseEstimator):
                  lr_scheduler: bool,
                  metrics: list,
                  train_mode: str,
-                 enable_progress_bar: True
+                 enable_progress_bar: True,
+                 log_dir : str,
+                 log_name : str
                 ):
                  
         super(ConvexMTLPytorchModel, self).__init__()
@@ -90,6 +93,8 @@ class ConvexMTLPytorchModel(BaseEstimator):
         self.early_stopping = early_stopping
         self.lr_scheduler = lr_scheduler
         self.enable_progress_bar = enable_progress_bar
+        self.log_dir = log_dir
+        self.log_name = log_name
 
     
     def predict_(self, X, task_info=-1, **kwargs):
@@ -99,6 +104,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
                                                     np.arange(n))
         X_data = np.delete(X, task_col, axis=1).astype(float)
         X_task = X[:, task_col]
+
         X_task_map = np.array([self.map_dic[x] for x in X_task])
 
 
@@ -134,7 +140,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
 
         return pred_tensor.detach().numpy()
 
-    def predict_common(self, X):
+    def predict_common(self, X, task_info=-1, **kwargs):
         """Predict using the multi-layer perceptron classifier
         Parameters
         ----------
@@ -145,15 +151,37 @@ class ConvexMTLPytorchModel(BaseEstimator):
         y : array-like, shape (n_samples,) or (n_samples, n_classes)
             The predicted classes.
         """
-        X_data = X[:, :-1][:, None]
-        X_tensor = torch.tensor(X_data)
-        y_pred = self.model.common_module(X_tensor).detach().numpy()
+        n, m = X.shape
+        task_col = task_info
+        self.unique, self.groups_idx = npi.group_by(X[:, task_col],
+                                                    np.arange(n))
+        X_data = np.delete(X, task_col, axis=1).astype(float)
+        
+        if 'new_shape' in kwargs and kwargs['new_shape'] is not None:
+            # ic(X_data.shape)
+            new_shape = [X_data.shape[0]] + list(kwargs['new_shape'])
+            X_data = np.reshape(X_data, tuple(new_shape))
+        elif hasattr(self, 'new_shape'):
+            if self.new_shape is not None:
+                new_shape = [n] + list(self.new_shape)
+                X_data = np.reshape(X_data, tuple(new_shape))
 
-        pred_flatten = y_pred.flatten()
+        # X_tensor_data = self.generate_tensors(X_data)
+        X_tensor_data = torch.tensor(X_data).float()
+        
+        # X_tensor_task = torch.tensor(X_task_map)
+        pred_tensor = self.model.common_module_(X_tensor_data)
 
-        return pred_flatten
+        # if not self.specific_lambda:
+        #     z = self.model.lamb.detach().numpy()
+        #     z_sigmoid = 1/(1 + np.exp(-z))
+        # else:
+        #     z = self.model.lamb_dic[t].detach().numpy()
+        #     z_sigmoid = 1/(1 + np.exp(-z))
 
-    def predict_task(self, X, task=None):
+        return pred_tensor.detach().numpy()
+
+    def predict_task(self, X, task, task_info=-1, **kwargs):
         """Predict using the multi-layer perceptron classifier
         Parameters
         ----------
@@ -164,14 +192,27 @@ class ConvexMTLPytorchModel(BaseEstimator):
         y : array-like, shape (n_samples,) or (n_samples, n_classes)
             The predicted classes.
         """
-        assert task in self.model.specific_modules_.keys()
-        X_data = X[:, :-1][:, None]
-        X_tensor = torch.tensor(X_data)
-        y_pred = self.model.specific_modules_[task](X_tensor).detach().numpy()
+        n, m = X.shape
+        task_col = task_info
+        self.unique, self.groups_idx = npi.group_by(X[:, task_col],
+                                                    np.arange(n))
+        X_data = np.delete(X, task_col, axis=1).astype(float)
+        
+        if task not in self.map_dic:
+            raise AttributeError('Task {} was not in the training set'.format(task))
 
-        pred_flatten = y_pred.flatten()
+        if 'new_shape' in kwargs and kwargs['new_shape'] is not None:
+            new_shape = [X_data.shape[0]] + list(kwargs['new_shape'])
+            X_data = np.reshape(X_data, tuple(new_shape))
+        elif hasattr(self, 'new_shape'):
+            if self.new_shape is not None:
+                new_shape = [n] + list(self.new_shape)
+                X_data = np.reshape(X_data, tuple(new_shape))
 
-        return pred_flatten
+        # X_tensor_data = self.generate_tensors(X_data)
+        X_tensor_data = torch.tensor(X_data).float()
+        pred_tensor = self.model.specific_modules_[self.map_dic[task]](X_tensor_data)
+        return pred_tensor.detach().numpy()
 
 
     
@@ -212,7 +253,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
     def _get_reg(self, **reg_kwargs):
         raise NotImplementedError()
     
-    def _get_loss_fun(self, **loss_kwargs):
+    def _get_loss_fun(self):
         switcher = {
             'mse': nn.MSELoss,
             'l1': nn.L1Loss,
@@ -239,82 +280,91 @@ class ConvexMTLPytorchModel(BaseEstimator):
     
     
     # @profile(output_file='train_lightning_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
-    def _train_lightning(self, train_dl, valid_dl):
-        trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar)
+    def _train_lightning(self, train_dl, valid_dl):        
         if self.val:
+            if self.early_stopping:
+                callbacks = [LightningEarlyStopping(monitor="val_loss", mode="min", min_delta=self.min_delta, patience=self.patience, verbose=False)]
+            else:
+                callbacks = []
+            trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar, default_root_dir=self.log_dir, callbacks=callbacks)
             trainer.fit(self.model, train_dl, valid_dl)
         else:
+            if self.early_stopping:
+                callbacks = [LightningEarlyStopping(monitor="loss", mode="min", min_delta=self.min_delta, patience=self.patience, verbose=False)]
+            else:
+                callbacks = []
+            trainer = Trainer(max_epochs=self.epochs, enable_progress_bar=self.enable_progress_bar, default_root_dir=self.log_dir, callbacks=callbacks)
             trainer.fit(self.model, train_dl)
 
-    # @profile(output_file='train_dataloader_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
-    def _train_dataloader(self, train_dl, valid_dl):
-        best_tr = np.inf
-        best_val = np.inf
-        old_val_loss = np.inf
-        early_stopping_count = 0
-        with trange(int(self.epochs), desc='Loss', position=0, leave=True, disable=not self.enable_progress_bar) as tri:
-                for epoch in tri:
-                    self.model.train()
-                    if self.lambda_trainable:
-                            z = self.model.lamb.detach().numpy()
-                            z_sigmoid = 1/(1 + np.exp(-z))
-                            self.lambda_history_.append(z_sigmoid)
-                    for i, (xb, tb, yb) in enumerate(train_dl):
-                        pred = self.model(xb, tb)
-                        loss = self.loss_fun_(pred, yb)
-                        loss.backward()
-                        # ic(loss.grad)
-                        self.opt.step()
-                        self.opt.zero_grad()
+    # # @profile(output_file='train_dataloader_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
+    # def _train_dataloader(self, train_dl, valid_dl):
+    #     best_tr = np.inf
+    #     best_val = np.inf
+    #     old_val_loss = np.inf
+    #     early_stopping_count = 0
+    #     with trange(int(self.epochs), desc='Loss', position=0, leave=True, disable=not self.enable_progress_bar) as tri:
+    #             for epoch in tri:
+    #                 self.model.train()
+    #                 if self.lambda_trainable:
+    #                         z = self.model.lamb.detach().numpy()
+    #                         z_sigmoid = 1/(1 + np.exp(-z))
+    #                         self.lambda_history_.append(z_sigmoid)
+    #                 for i, (xb, tb, yb) in enumerate(train_dl):
+    #                     pred = self.model(xb, tb)
+    #                     loss = self.loss_fun_(pred, yb)
+    #                     loss.backward()
+    #                     # ic(loss.grad)
+    #                     self.opt.step()
+    #                     self.opt.zero_grad()
                 
-                    self.model.eval()
-                    with torch.no_grad():
-                        tr_loss = sum(self.loss_fun_(self.model(xb, tb), yb) for xb, tb, yb in train_dl)
+    #                 self.model.eval()
+    #                 with torch.no_grad():
+    #                     tr_loss = sum(self.loss_fun_(self.model(xb, tb), yb) for xb, tb, yb in train_dl)
 
-                    if tr_loss <= best_tr:
-                        best_tr = tr_loss
+    #                 if tr_loss <= best_tr:
+    #                     best_tr = tr_loss
                     
-                    if self.val:                        
-                        with torch.no_grad():
-                            val_loss = sum(self.loss_fun_(self.model(xb, tb), yb) for xb, tb, yb in valid_dl)
+    #                 if self.val:                        
+    #                     with torch.no_grad():
+    #                         val_loss = sum(self.loss_fun_(self.model(xb, tb), yb) for xb, tb, yb in valid_dl)
                         
-                        if val_loss >= best_val - self.min_delta: # old_val_loss - self.min_delta:
-                            early_stopping_count += 1
-                        else:
-                            early_stopping_count = 0
+    #                     if val_loss >= best_val - self.min_delta: # old_val_loss - self.min_delta:
+    #                         early_stopping_count += 1
+    #                     else:
+    #                         early_stopping_count = 0
 
-                        old_val_loss = val_loss
+    #                     old_val_loss = val_loss
 
-                        if self.patience > 0 and early_stopping_count >= self.patience:
-                            break
+    #                     if self.patience > 0 and early_stopping_count >= self.patience:
+    #                         break
 
 
-                        if val_loss <= best_val:
-                            best_val = val_loss             
+    #                     if val_loss <= best_val:
+    #                         best_val = val_loss             
 
-                    # store loss and metrics history
-                    self.history['loss'].append(tr_loss.detach().item())
-                    # pred_train, y_train_ = map(lambda x: x[0].detach().numpy(),zip(*[(self.model(xb, tb), yb) for xb, tb, yb in train_dl]))
-                    if self.val:
-                        self.history['val_loss'].append(val_loss.detach().item())
-                        # pred_val, y_val_ = list(map(lambda x: x[0].detach().numpy(), zip(*[(self.model(xb, tb), yb) for xb, tb, yb in valid_dl])))
+    #                 # store loss and metrics history
+    #                 self.history['loss'].append(tr_loss.detach().item())
+    #                 # pred_train, y_train_ = map(lambda x: x[0].detach().numpy(),zip(*[(self.model(xb, tb), yb) for xb, tb, yb in train_dl]))
+    #                 if self.val:
+    #                     self.history['val_loss'].append(val_loss.detach().item())
+    #                     # pred_val, y_val_ = list(map(lambda x: x[0].detach().numpy(), zip(*[(self.model(xb, tb), yb) for xb, tb, yb in valid_dl])))
 
                     
-                    # for m in self.metrics:
-                    #     scoring_fun = metric_scorers[m]._score_func
-                    #     score = scoring_fun(y_train_, pred_train)
-                    #     self.history[m].append(score)
-                    #     if self.val:
-                    #         self.history['val_{}'.format(m)].append(scoring_fun(y_val_, pred_val))
+    #                 # for m in self.metrics:
+    #                 #     scoring_fun = metric_scorers[m]._score_func
+    #                 #     score = scoring_fun(y_train_, pred_train)
+    #                 #     self.history[m].append(score)
+    #                 #     if self.val:
+    #                 #         self.history['val_{}'.format(m)].append(scoring_fun(y_val_, pred_val))
 
-                    tr_text = f"{tr_loss:4.2f}({best_tr:4.2f})"
-                    if self.val:
-                        val_text = f"{val_loss:4.2f}({best_val:4.2f})"
-                    else:
-                        val_text = "N/A"
+    #                 tr_text = f"{tr_loss:4.2f}({best_tr:4.2f})"
+    #                 if self.val:
+    #                     val_text = f"{val_loss:4.2f}({best_val:4.2f})"
+    #                 else:
+    #                     val_text = "N/A"
 
-                    tri.set_description(
-                            f"Loss: {tr_loss:6.4e}, Tr:{tr_text}, V:{val_text}")
+    #                 tri.set_description(
+    #                         f"Loss: {tr_loss:6.4e}, Tr:{tr_text}, V:{val_text}")
 
 
     # @profile(output_file='train_numpy_convexmtl.prof', sort_by='cumulative', lines_to_print=20, strip_dirs=True)
@@ -477,6 +527,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
             X_data = np.reshape(X_data, tuple(new_shape))
 
         self.map_dic = dict(zip(self.unique, range(len(self.unique))))
+
         self.inv_map_dic =  {v: k for k, v in self.map_dic.items()}
         X_task_map = np.array([self.map_dic[x] for x in X_task])
 
@@ -533,7 +584,7 @@ class ConvexMTLPytorchModel(BaseEstimator):
             X_val, t_val = self.generate_tensors(X_val, t_val)
             y_val = self.generate_tensors_target(y_val)
             valid_ds = TensorDataset(X_val, t_val, y_val)
-            valid_dl = DataLoader(valid_ds, batch_size=self.batch_size * 2)
+            valid_dl = DataLoader(valid_ds, batch_size=self.batch_size)
 
             if self.early_stopping:
                 self._early_stopping = EarlyStopping(patience=self.patience,
@@ -583,7 +634,6 @@ class ConvexMTLPytorchModel(BaseEstimator):
 
     def _create_model(self, input_dim, n_output=1, n_channel=1, name=None, **model_kwargs):
         tasks = list(self.map_dic.values())
-        # ic(list(self.map_dic.items()))
         # ic(tasks)
         if self.n_hidden_specific is None:
             n_hidden_specific = self.n_hidden_common
@@ -607,16 +657,12 @@ class ConvexMTLPytorchModel(BaseEstimator):
                                       lamb=self.lamb,
                                       common_module=self.common_module,
                                       specific_modules=self.specific_modules,
+                                      loss_fun=self.loss_fun,
                                       **model_kwargs)        
         return model
     
     def generate_tensors(self, *args):
-        # if t.ndim == 1:
-        #     t_2d = t[:, None]
-        # else:
-        #     t_2d = t
         tensor_args = map(lambda z: torch.tensor(z).float(), args)
-        # t = t.int()
         return tensor_args
     
     def plot_history(self, val=True, ax=None, include_metrics=False, **kwargs):
@@ -668,8 +714,6 @@ class ConvexMTLPytorchModel(BaseEstimator):
         plt.legend()
 
         return ax
-        
-
 
     def score(self, X, y, sample_weight=None):
         pass
@@ -700,13 +744,15 @@ class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
                 lambda_trainable = False,
                 specific_lambda = False,
                 lambda_lr = 0.001,
-                min_delta = 1e-4,
+                min_delta = 1e-5,
                 random_state = 42,
                 metrics = [],
                 train_mode='numpy',
                 early_stopping=True,
                 lr_scheduler = True,
-                enable_progress_bar = True):
+                enable_progress_bar = True,
+                log_dir = None,
+                log_name = ''):
         super().__init__(loss_fun=loss_fun,
                          common_module=common_module,
                          specific_modules=specific_modules,
@@ -729,7 +775,9 @@ class ConvexMTLPytorchClassifier(ConvexMTLPytorchModel):
                          train_mode=train_mode,
                          early_stopping=early_stopping,
                          lr_scheduler=lr_scheduler,
-                         enable_progress_bar=enable_progress_bar)
+                         enable_progress_bar=enable_progress_bar,
+                         log_dir=log_dir,
+                         log_name=log_name)
         
     
     
@@ -823,13 +871,15 @@ class ConvexMTLPytorchRegressor(ConvexMTLPytorchModel):
                  lambda_trainable = False,
                  specific_lambda = False,
                  lambda_lr = 0.001,
-                 min_delta = 1e-4,
+                 min_delta = 1e-5,
                  random_state = 42,
                  metrics = [],
                  train_mode='numpy',
                  early_stopping=True,
                  lr_scheduler = True,
-                 enable_progress_bar = True):
+                 enable_progress_bar = True,
+                 log_dir = None,
+                 log_name = ''):
         # kwargs = {**kwargs, **{'weight_decay': weight_decay}}
         super().__init__(loss_fun=loss_fun,
                          common_module=common_module,
@@ -853,7 +903,9 @@ class ConvexMTLPytorchRegressor(ConvexMTLPytorchModel):
                          train_mode=train_mode,
                          early_stopping=early_stopping,
                          lr_scheduler=lr_scheduler,
-                         enable_progress_bar=enable_progress_bar)
+                         enable_progress_bar=enable_progress_bar,
+                         log_dir=log_dir,
+                         log_name=log_name)
 
     def fit(self, X, y, task_info=-1, verbose=False, X_val=None, y_val=None, X_test=None, y_test=None, **kwargs):
         if y.ndim == 1:
@@ -868,7 +920,12 @@ class ConvexMTLPytorchRegressor(ConvexMTLPytorchModel):
         task_col = self.task_info
         n, m = X_data.shape[:2]
         input_dim = m
-        self.model = self._create_model(input_dim, n_output=1, name=name)
+        if not hasattr(self, 'new_shape') or self.new_shape is None:
+            n_channel = 1
+        else:
+            n_channel = self.new_shape[0]
+
+        self.model = self._create_model(input_dim, n_output=1, n_channel=n_channel, name=name)
         return self.model
     
     def generate_tensors_target(self, target):

@@ -4,8 +4,11 @@ import matplotlib.cm as cm
 from random import randint
 
 from icecream import ic
+import seaborn as sns
 
 from abc import ABC, abstractmethod
+
+
 
 class MTLSyntheticRegressionDataset(ABC):
     """
@@ -22,15 +25,17 @@ class MTLSyntheticRegressionDataset(ABC):
     """
 
     def __init__(self, n_samples_per_task, noise, n_tasks, random_state, start, stop):
+        print('Init Synth')
         self.n_samples_per_task = n_samples_per_task
         self.noise = noise
         self.n_tasks = n_tasks
         self.random_state = random_state
-        self.start = start
-        self.stop = stop
         np.random.seed(self.random_state)
+        self.start = start
+        self.stop = stop        
         self.tasks = self._generate_tasks()
         self.colors = self.get_colors()
+        print('TASK FUNCTIONS')
         self.task_functions = self._generate_task_functions()
         self.X, self.y = self._generate_data()
 
@@ -50,7 +55,7 @@ class MTLSyntheticRegressionDataset(ABC):
 
         for t in self.tasks:            
             f_t = self.task_functions[t]
-            x_task = np.linspace(self.start, self.stop, m_t)[:, None]
+            x_task = np.random.uniform(self.start, self.stop, m_t)[:, None] # np.linspace(self.start, self.stop, m_t)[:, None]
 
             
             y_task = self._function_task(x_task, t) + + rng.randn(self.n_samples_per_task)[:, None] * self.noise
@@ -62,7 +67,7 @@ class MTLSyntheticRegressionDataset(ABC):
 
 
         X_data = np.concatenate(x_l, axis=0)
-        ic(X_data.shape)
+        
         t = np.concatenate(t_l, axis=0)
         X = np.concatenate((X_data, t), axis=1)
         y = np.concatenate(y_l, axis=0).flatten()
@@ -197,7 +202,7 @@ class MTLFunctionsRegression(MTLSyntheticRegressionDataset):
             coefs = np.random.randn(shape[0])
             self.fun_tasks[t] = np.poly1d(coefs)
 
-        ic(self.fun_tasks)
+
 
         task_functions = {}
         for t in self.tasks:
@@ -207,7 +212,93 @@ class MTLFunctionsRegression(MTLSyntheticRegressionDataset):
 
     
 
-class MTLClustersARegression(MTLSyntheticRegressionDataset):
+class MTLClustersRegression(MTLSyntheticRegressionDataset):
+    """
+    A class to generate a synthetic regression dataset.
+
+    Parameters
+    ----------
+    n_samples : int
+        The number of samples to generate.
+    noise : float
+        The standard deviation of the Gaussian noise to add to the target.
+    random_state : int or None
+        The seed to use for the random number generator.
+    """
+
+    def __init__(self, n_samples_per_task=25, noise=0.1, n_tasks=3,
+                random_state=42, start=-2., stop=2.):
+        super().__init__(n_samples_per_task=n_samples_per_task, 
+                        noise=noise, n_tasks=n_tasks, 
+                        random_state=random_state, start=start, stop=stop)
+        
+    def get_colors(self):
+        colors = {t: cm.tab10(int(t/10)) for t in self.tasks}
+        
+        # print(colors)
+        return colors
+    
+    def _get_color(self, t):
+        color = cm.tab10(int(t/10))
+        return color
+    
+    def _get_marker(self, t):
+        markers = ['.', 'o', 'v', '*', '^']
+        return markers[int(t%10)]
+        
+    def _generate_tasks(self):
+        self.num_vtasks = self.get_num_vtasks()
+        tasks = []
+        for t in range(self.n_tasks):
+            m_t = self.num_vtasks[t]
+            tasks.extend([t*10+j for j in range(m_t)])
+        ic(tasks)
+        return tasks
+        
+    def _function_task(self, x, t=None):
+        real_t = int(t/10)
+        y = self.fun_tasks[real_t](x)
+        return y
+    
+    def _generate_task_functions(self):
+        self.fun_tasks = self.get_task_functions()
+
+        task_functions = {}
+        for t in self.tasks:
+            task_functions[t] = (lambda x: self._function_task(x, t=t))
+
+        return task_functions
+    
+    def get_adj_matrix(self):
+        total_numv = np.sum(list(self.num_vtasks.values()))
+        matrix = np.zeros((total_numv, total_numv))
+        count = 0
+        for r, m_r in self.num_vtasks.items():
+            rg_idx = np.array(range(count, count+m_r))
+            ic(rg_idx)
+            matrix[rg_idx[:, None], rg_idx] = np.ones((m_r, m_r))/m_r
+            count += m_r
+
+        return matrix
+    
+    def plot_adj_matrix(self, ax=None): 
+
+        if ax is None:
+            plt.figure(figsize=(10, 8))
+            ax = plt.gca()
+
+        adj_matrix = self.get_adj_matrix()
+        tasks = self.tasks
+        fig = sns.heatmap(adj_matrix, xticklabels=tasks, yticklabels=tasks, vmin=0, vmax=1, ax=ax)
+        return fig
+
+    
+    @abstractmethod
+    def get_task_functions(self):
+        pass
+
+
+class MTLClustersARegression(MTLClustersRegression):
     """
     A class to generate a synthetic regression dataset.
 
@@ -227,47 +318,98 @@ class MTLClustersARegression(MTLSyntheticRegressionDataset):
                          noise=noise, n_tasks=n_tasks, 
                          random_state=random_state, start=start, stop=stop)
         
-    def get_colors(self):
-        colors = {t: cm.tab10(int(t/10)) for t in self.tasks}
-        ic(colors)
-        # print(colors)
-        return colors
+    def get_num_vtasks(self):
+        num_vtasks = {
+            0: 1,
+            1: 4,
+            2: 1
+        }
+        return num_vtasks
     
-    def _get_color(self, t):
-        color = cm.tab10(int(t/10))
-        return color
-    
-    def _get_marker(self, t):
-        markers = ['.', 'o', 'v', '*', '^']
-        return markers[int(t%10)]
-        
-    def _generate_tasks(self):
-        tasks = []
-        for t in range(self.n_tasks):
-            m_t = randint(1,5)
-            tasks.extend([t*10+j for j in range(m_t)])
-        ic(tasks)
-        return tasks
-        
-    def _function_task(self, x, t=None):
-        real_t = int(t/10)
-        y = self.fun_tasks[real_t](x)
-        # if t is not None:
-        #     y += (1e-6 * self.fun_tasks[t](x))
-        return y
-
-    def _generate_task_functions(self):
-        self.fun_tasks = {
+    def get_task_functions(self):
+        fun_tasks = {
             0: np.vectorize(lambda x: 10 * np.sin(x)),
             1: np.vectorize(lambda x: x**2),
             2: np.vectorize(lambda x: x**3)
         }
+        return fun_tasks
 
-        task_functions = {}
-        for t in self.tasks:
-            task_functions[t] = (lambda x: self._function_task(x, t=t))
 
-        return task_functions
+
+class MTLClustersBRegression(MTLClustersRegression):
+    """
+    A class to generate a synthetic regression dataset.
+
+    Parameters
+    ----------
+    n_samples : int
+        The number of samples to generate.
+    noise : float
+        The standard deviation of the Gaussian noise to add to the target.
+    random_state : int or None
+        The seed to use for the random number generator.
+    """
+
+    def __init__(self, n_samples_per_task=25, noise=0.1, n_tasks=3,
+                  random_state=42, start=-2., stop=2.):
+        super().__init__(n_samples_per_task=n_samples_per_task, 
+                         noise=noise, n_tasks=n_tasks, 
+                         random_state=random_state, start=start, stop=stop)
+        
+    def get_num_vtasks(self):
+        num_vtasks = {
+            0: 2,
+            1: 3,
+            2: 2
+        }
+        return num_vtasks
+    
+    def get_task_functions(self):
+        fun_tasks = {
+            0: np.vectorize(lambda x: 10 * np.sin(x)),
+            1: np.vectorize(lambda x: x**2),
+            2: np.vectorize(lambda x: x**3)
+        }
+        return fun_tasks
+
+
+class MTLClustersCRegression(MTLClustersRegression):
+    """
+    A class to generate a synthetic regression dataset.
+
+    Parameters
+    ----------
+    n_samples : int
+        The number of samples to generate.
+    noise : float
+        The standard deviation of the Gaussian noise to add to the target.
+    random_state : int or None
+        The seed to use for the random number generator.
+    """
+
+    def __init__(self, n_samples_per_task=25, noise=0.1, n_tasks=3,
+                  random_state=42, start=-2., stop=2.):
+        super().__init__(n_samples_per_task=n_samples_per_task, 
+                         noise=noise, n_tasks=n_tasks, 
+                         random_state=random_state, start=start, stop=stop)
+        
+    def get_num_vtasks(self):
+        num_vtasks = {
+            0: 4,
+            1: 4,
+            2: 5
+        }
+        return num_vtasks
+    
+    def get_task_functions(self):
+        fun_tasks = {
+            0: np.vectorize(lambda x: 10 * np.sin(x)),
+            1: np.vectorize(lambda x: x**2),
+            2: np.vectorize(lambda x: x**3)
+        }
+        return fun_tasks
+
+    
 
 
 class MTLCommonRegression(MTLSyntheticRegressionDataset):
@@ -307,7 +449,7 @@ class MTLCommonRegression(MTLSyntheticRegressionDataset):
     def _generate_tasks(self):
         tasks = []
         for t in range(self.n_tasks):
-            m_t = randint(3,5)
+            m_t =randint(3,5)
             tasks.extend([t*10+j for j in range(m_t)])
         ic(tasks)
         return tasks

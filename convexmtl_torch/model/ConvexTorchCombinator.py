@@ -61,7 +61,6 @@ class ConvexTorchCombinator(LightningModule):
         if common_module is None or common_module == NeuralNetwork:
             net_specific_kwargs['n_hidden_specific'] = kwargs['n_hidden_specific']
 
-
         if self.specific_lambda:
             self.lamb_dic = {}
             for t in tasks:
@@ -150,20 +149,29 @@ class ConvexTorchCombinator(LightningModule):
         # ic(self.global_step, x.shape)
         logits = self(x, t)
         loss_fun = self._get_loss_fun()
+        # ic(y.shape)
+        # ic(logits.shape)
         loss = loss_fun(logits, y)
+        self.log('loss', loss, on_step=False, on_epoch=True)
         if not self.specific_lambda:
             self.log('lambda', torch.sigmoid(self.lamb), on_step=False, on_epoch=True)
         else:
             self.log_dict({'lambda_{}'.format(t): torch.sigmoid(lamb_t) for t, lamb_t in self.lamb_dic.items()}, on_step=False, on_epoch=True)
         return loss
     
+    def validation_step(self, batch, batch_idx, **kwargs):
+        x, t, y = batch
+        logits = self(x, t)
+        loss_fun = self._get_loss_fun()
+        loss = loss_fun(logits, y)
+        self.log('val_loss', loss, on_step=False, on_epoch=True)
+        return loss
+    
     def get_lamb(self):
         if self.specific_lambda:
-            ic(self.lamb_dic)
             lamb_dic_ = {t: torch.sigmoid(lamb_t).detach().numpy() for t, lamb_t in self.lamb_dic.items()}
             return lamb_dic_
         else:
-            ic(self.lamb)
             lamb_ = torch.sigmoid(self.lamb).detach().numpy()
             return lamb_
         

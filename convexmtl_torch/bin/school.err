@@ -1,104 +1,1386 @@
 nohup: no se tendrá en cuenta la entrada
 ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
-                                                                StandardScaler()),
+                                                                MTLStandardScaler()),
                                                                ('estim',
                                                                 ConvexMTLPytorchRegressor(enable_progress_bar=False,
-                                                                                          epochs=50,
-                                                                                          lambda_trainable=True))]),
+                                                                                          lamb=0,
+                                                                                          n_hidden_common=4))]),
                                      transformer=MinMaxScaler())
-ic| param_grid: {'lambda_lr': [0.001, 0.01, 0.1], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| estim_name: 'ind_nn_4'
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
 ic| fold: 0
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_4__cv0.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 1
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_4__cv1.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 2
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_4__cv2.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 3
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_4__cv3.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 4
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_4__cv4.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
-                                                                StandardScaler()),
+                                                                MTLStandardScaler()),
                                                                ('estim',
                                                                 ConvexMTLPytorchRegressor(enable_progress_bar=False,
-                                                                                          epochs=50,
-                                                                                          lamb=1))]),
+                                                                                          lamb=1,
+                                                                                          n_hidden_common=4))]),
                                      transformer=MinMaxScaler())
-ic| param_grid: {'weight_decay': [0.001, 0.01, 0.1]}
+ic| estim_name: 'common_nn_4'
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
 ic| fold: 0
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_4__cv0.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 1
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_4__cv1.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 2
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_4__cv2.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 3
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_4__cv3.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 4
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_4__cv4.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
-                                                                StandardScaler()),
+                                                                MTLStandardScaler()),
                                                                ('estim',
                                                                 ConvexMTLPytorchRegressor(enable_progress_bar=False,
-                                                                                          epochs=50,
-                                                                                          lamb=0))]),
+                                                                                          n_hidden_common=4))]),
                                      transformer=MinMaxScaler())
-ic| param_grid: {'weight_decay': [0.001, 0.01, 0.1]}
+ic| estim_name: 'cvx_nn_4'
+ic| param_grid: {'early_stopping': [False],
+                 'lamb': [0.0, 0.2, 0.4, 0.6000000000000001, 0.8, 1.0],
+                 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False],
+                 'lamb': [0.0, 0.2, 0.4, 0.6000000000000001, 0.8, 1.0],
+                 'weight_decay': [0.001, 0.01, 0.1]}
 ic| fold: 0
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_4__cv0.joblib'
+ic| gs: None
+ic| force_refit: False
+/home/carlos.ruizp/HAIS2023/convexMTLPyTorch/convexmtl_torch/bin/utils.py:144: RuntimeWarning: More than 20 figures have been opened. Figures created through the pyplot interface (`matplotlib.pyplot.figure`) are retained until explicitly closed and may consume too much memory. (To control this warning, see the rcParam `figure.max_open_warning`).
+  plt.figure( figsize=(8, 5))
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 1
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_4__cv1.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 2
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_4__cv2.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 3
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_4__cv3.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
 ic| fold: 4
-/home/carlos.ruizp/miniconda3/envs/rkm/lib/python3.9/site-packages/sklearn/model_selection/_split.py:676: UserWarning:
-
-The least populated class in y has only 1 members, which is less than n_splits=5.
-
-ic| df:                 mae         mse
-        cvx_nn     8.614947  122.088764
-        common_nn  8.156343  106.843739
-        ind_nn     8.835468  127.987263
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_4__cv4.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                MTLStandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          lambda_trainable=True,
+                                                                                          n_hidden_common=4))]),
+                                     transformer=MinMaxScaler())
+ic| estim_name: 'cvx-trainable_nn_4'
+ic| param_grid: {'early_stopping': [False],
+                 'lambda_lr': [0.001, 0.01, 0.1, 1],
+                 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False],
+                 'lambda_lr': [0.001, 0.01, 0.1, 1],
+                 'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_4__cv0.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 1
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_4__cv1.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 2
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_4__cv2.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 3
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_4__cv3.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 4
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_4__cv4.joblib'
+ic| gs: None
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                MTLStandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          lamb=0,
+                                                                                          n_hidden_common=8))]),
+                                     transformer=MinMaxScaler())
+ic| estim_name: 'ind_nn_8'
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_8__cv0.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=0,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 1
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_8__cv1.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=0,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 2
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_8__cv2.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=0,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 3
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_8__cv3.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=0,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 4
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__ind_nn_8__cv4.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=0,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                MTLStandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          lamb=1,
+                                                                                          n_hidden_common=8))]),
+                                     transformer=MinMaxScaler())
+ic| estim_name: 'common_nn_8'
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False], 'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_8__cv0.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=1,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 1
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_8__cv1.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=1,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 2
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_8__cv2.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=1,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 3
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_8__cv3.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=1,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 4
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__common_nn_8__cv4.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                     estimator=TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lamb=1,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                MTLStandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          n_hidden_common=8))]),
+                                     transformer=MinMaxScaler())
+ic| estim_name: 'cvx_nn_8'
+ic| param_grid: {'early_stopping': [False],
+                 'lamb': [0.0, 0.2, 0.4, 0.6000000000000001, 0.8, 1.0],
+                 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False],
+                 'lamb': [0.0, 0.2, 0.4, 0.6000000000000001, 0.8, 1.0],
+                 'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_8__cv0.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lamb': [0.0, 0.2, 0.4,
+                                                            0.6000000000000001, 0.8,
+                                                            1.0],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 1
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_8__cv1.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lamb': [0.0, 0.2, 0.4,
+                                                            0.6000000000000001, 0.8,
+                                                            1.0],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 2
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_8__cv2.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lamb': [0.0, 0.2, 0.4,
+                                                            0.6000000000000001, 0.8,
+                                                            1.0],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 3
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_8__cv3.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lamb': [0.0, 0.2, 0.4,
+                                                            0.6000000000000001, 0.8,
+                                                            1.0],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 4
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx_nn_8__cv4.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                     MTLStandardScaler()),
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lamb': [0.0, 0.2, 0.4,
+                                                            0.6000000000000001, 0.8,
+                                                            1.0],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| pipe: TransformedTargetRegressor(regressor=Pipeline(steps=[('scaler',
+                                                                MTLStandardScaler()),
+                                                               ('estim',
+                                                                ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                          lambda_trainable=True,
+                                                                                          n_hidden_common=8))]),
+                                     transformer=MinMaxScaler())
+ic| estim_name: 'cvx-trainable_nn_8'
+ic| param_grid: {'early_stopping': [False],
+                 'lambda_lr': [0.001, 0.01, 0.1, 1],
+                 'weight_decay': [0.001, 0.01, 0.1]}
+ic| param_grid: {'early_stopping': [False],
+                 'lambda_lr': [0.001, 0.01, 0.1, 1],
+                 'weight_decay': [0.001, 0.01, 0.1]}
+ic| fold: 0
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_8__cv0.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lambda_trainable=True,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lambda_lr': [0.001, 0.01, 0.1, 1],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 1
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_8__cv1.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lambda_trainable=True,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lambda_lr': [0.001, 0.01, 0.1, 1],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 2
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_8__cv2.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lambda_trainable=True,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lambda_lr': [0.001, 0.01, 0.1, 1],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 3
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_8__cv3.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lambda_trainable=True,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lambda_lr': [0.001, 0.01, 0.1, 1],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| fold: 4
+ic| X_trainval: array([[1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       [1., 0., 0., ..., 0., 0., 0.],
+                       ...,
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.],
+                       [0., 1., 0., ..., 1., 0., 3.]])
+ic| retrain: False
+ic| file_name: 'results/school_mini__cvx-trainable_nn_8__cv4.joblib'
+ic| gs: GridSearchCV(cv=[(array([  0,   1,   2,   3,   4,   6,   7,   8,   9,  11,  13,  16,  17,
+                18,  20,  25,  26,  27,  28,  29,  30,  31,  32,  33,  35,  36,
+                37,  38,  39,  41,  42,  43,  44,  45,  46,  48,  49,  50,  52,
+                53,  56,  57,  58,  59,  61,  62,  63,  64,  65,  67,  68,  70,
+                71,  72,  73,  74,  76,  77,  80,  81,  82,  83,  84,  85,  86,
+                87,  88,  89,  90,  91,  92,  93,  94,  95,  96,  97,  98,  99,
+               101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114,
+               115, 116, 117, 118, 120, 122, 123, 126, 127, 128, 129, 130,...
+                                                                                    ('estim',
+                                                                                     ConvexMTLPytorchRegressor(enable_progress_bar=False,
+                                                                                                               epochs=50,
+                                                                                                               lambda_trainable=True,
+                                                                                                               n_hidden_common=8))]),
+                                                          transformer=MinMaxScaler()),
+                     n_jobs=-1,
+                     param_grid={'regressor__estim__lambda_lr': [0.001, 0.01, 0.1, 1],
+                                 'regressor__estim__weight_decay': [0.001, 0.01, 0.1]},
+                     refit=False,
+                     scoring=make_scorer(mean_absolute_error, greater_is_better=False),
+                     verbose=2)
+ic| force_refit: False
+ic| task: None
+ic| task: None
+ic| X_test: array([[1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   [1., 0., 0., ..., 0., 0., 0.],
+                   ...,
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.],
+                   [0., 1., 0., ..., 1., 0., 3.]])
+ic| X_test.shape: (100, 28)
+ic| df:                          mae         mse
+        ind_nn_4            8.097459  111.648022
+        common_nn_4         7.812461  100.752742
+        cvx_nn_4            8.319456  116.442638
+        cvx-trainable_nn_4  8.202600  113.987150
+        ind_nn_8            8.147833  111.965226
+        common_nn_8         8.196530  109.905532
+        cvx_nn_8            8.008312  107.400086
+        cvx-trainable_nn_8  8.227623  111.519454

@@ -17,6 +17,8 @@ from icecream import ic
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
+SEED = 42
+
 
 DATASETS = [
     # Debug
@@ -57,6 +59,20 @@ class MultipleDomainDataset:
 
     def __getitem__(self, index):
         return self.datasets[index]
+
+    def __len__(self):
+        return len(self.datasets)
+
+
+class MultipleDomainDatasetTrainTest:
+    N_STEPS = 5001           # Default, subclasses may override
+    CHECKPOINT_FREQ = 100    # Default, subclasses may override
+    N_WORKERS = 8            # Default, subclasses may override
+    ENVIRONMENTS = None      # Subclasses should override
+    INPUT_SHAPE = None       # Subclasses should override
+
+    def __getitem__(self, index):
+        return zip(self.datasets_tr[index], self.datasets_te[index])
 
     def __len__(self):
         return len(self.datasets)
@@ -105,8 +121,8 @@ def image_loader(loader, image_name):
     image = image.unsqueeze(0)
     return image
 
-PATH = '/home/carlos/Documents/Universidad/doctorado/data/background_images/texture.jpeg'
-# PATH = '/home/carlos.ruizp/data/background_images/texture.jpeg'
+# PATH = '/home/carlos/Documents/Universidad/doctorado/data/background_images/texture.jpeg'
+PATH = '/home/carlos.ruizp/data/background_images/texture.jpeg'
 class AddBackgroundImage(object):
     def __init__(self, path=PATH, mean=0.1, std=0.1):
         loader = transforms.Compose([transforms.Grayscale(), transforms.ToTensor()])
@@ -160,7 +176,7 @@ class MultipleEnvironmentMNIST(MultipleDomainDataset):
         original_labels = torch.cat((original_dataset_tr.targets,
                                      original_dataset_te.targets))
 
-        # generator = torch.manual_seed(SEED)
+        generator = torch.manual_seed(SEED)
         shuffle = torch.randperm(len(original_images))
 
         original_images = original_images[shuffle]
@@ -179,6 +195,56 @@ class MultipleEnvironmentMNIST(MultipleDomainDataset):
             ic(images.shape)
             self.datasets.append(dataset_transform(images, labels, environments[i]))
             X, y = self.datasets[i]
+
+        # ic(self.datasets)
+        self.input_shape = input_shape
+        self.num_classes = num_classes
+        
+
+
+class MultipleEnvironmentMNISTTrTe(MultipleDomainDatasetTrainTest):
+    def __init__(self, root, environments, dataset_transform, input_shape,
+                 num_classes):
+        super().__init__()
+        ic(root)
+        if root is None:
+            raise ValueError('Data directory not specified!')
+
+        original_dataset_tr = MNIST(root, train=True, download=True)
+        original_dataset_te = MNIST(root, train=False, download=True)
+
+        original_images_tr = original_dataset_tr.data
+        original_images_te = original_dataset_te.data
+
+        original_labels_tr = original_dataset_tr.targets
+        original_labels_te = original_dataset_te.targets
+
+        generator = torch.manual_seed(SEED)
+        shuffle_tr = torch.randperm(len(original_images_tr))
+
+        original_images_tr = original_images_tr[shuffle_tr]
+        original_labels_tr = original_labels_tr[shuffle_tr]
+
+        generator = torch.manual_seed(SEED)
+        shuffle_te = torch.randperm(len(original_images_te))
+
+        original_images_te = original_images_te[shuffle_te]
+        original_labels_te = original_labels_te[shuffle_te]
+
+
+        self.datasets_tr = []
+        self.datasets_te = []
+        self.environments = environments
+
+
+        for i in range(len(environments)):
+            images_tr = original_images_tr[i::len(environments)]
+            labels_tr = original_labels_tr[i::len(environments)]
+            self.datasets_tr.append(dataset_transform(images_tr, labels_tr, environments[i]))
+
+            images_te = original_images_te[i::len(environments)]
+            labels_te = original_labels_te[i::len(environments)]
+            self.datasets_te.append(dataset_transform(images_te, labels_te, environments[i]))
 
         # ic(self.datasets)
         self.input_shape = input_shape
@@ -247,6 +313,28 @@ class RotatedMNIST(MultipleEnvironmentMNIST):
         y = labels.view(-1)
 
         return x, y
+    
+class RotatedMNISTTrTe(MultipleEnvironmentMNISTTrTe):
+    ENVIRONMENTS = ['0', '15', '30', '45', '60', '75']
+
+    def __init__(self, root, test_envs, hparams):
+        super(RotatedMNISTTrTe, self).__init__(root, [0, 15, 30, 45, 60, 75],
+                                           self.rotate_dataset, (1, 28, 28,), 10)
+
+    def rotate_dataset(self, images, labels, angle):
+        rotation = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Lambda(lambda x: rotate(x, angle, fill=(0,),
+                interpolation=torchvision.transforms.InterpolationMode.BILINEAR)),
+            transforms.ToTensor()])
+
+        x = torch.zeros(len(images), 1, 28, 28)
+        for i in range(len(images)):
+            x[i] = rotation(images[i])
+
+        y = labels.view(-1)
+
+        return x, y
 
     
 class MNISTVariations(MultipleEnvironmentMNIST):
@@ -254,6 +342,41 @@ class MNISTVariations(MultipleEnvironmentMNIST):
 
     def __init__(self, root, test_envs, hparams):
         super(MNISTVariations, self).__init__(root, self.ENVIRONMENTS,
+                                           self.mnist_variate, (1, 28, 28,), 10)
+
+    def mnist_variate(self, images, labels, task):
+        
+        if task == 'standard':
+            transform=transforms.Compose([
+                # transforms.Normalize((0.1307,), (0.3081,)),
+            ])
+        elif task == 'random':
+            transform=transforms.Compose([
+                # transforms.Normalize((0.1307,), (0.3081,)),
+                AddGaussianNoise(0., 100.)
+            ])         
+        elif task == 'images':
+            transform=transforms.Compose([
+                # transforms.Normalize((0.1307,), (0.3081,)),
+                AddBackgroundImage(std=images.numpy().std())
+            ])    
+        else:
+            raise ValueError('{} is not a valid task'.format(task))
+
+        x = torch.zeros(len(images), 1, 28, 28)
+        for i in range(len(images)):
+            x[i] = transform(images[i])
+
+        y = labels.view(-1)
+
+        return x, y
+    
+
+class MNISTVariationsTrTe(MultipleEnvironmentMNISTTrTe):
+    ENVIRONMENTS = ['standard', 'images', 'random']    
+
+    def __init__(self, root, test_envs, hparams):
+        super(MNISTVariationsTrTe, self).__init__(root, self.ENVIRONMENTS,
                                            self.mnist_variate, (1, 28, 28,), 10)
 
     def mnist_variate(self, images, labels, task):
@@ -300,7 +423,7 @@ class MultipleEnvironmentFashionMNIST(MultipleDomainDataset):
         original_labels = torch.cat((original_dataset_tr.targets,
                                      original_dataset_te.targets))
 
-        # generator = torch.manual_seed(SEED)
+        generator = torch.manual_seed(SEED)
         shuffle = torch.randperm(len(original_images))
 
         original_images = original_images[shuffle]
@@ -314,6 +437,56 @@ class MultipleEnvironmentFashionMNIST(MultipleDomainDataset):
             labels = original_labels[i::len(environments)]
             self.datasets.append(dataset_transform(images, labels, environments[i]))
 
+        self.input_shape = input_shape
+        self.num_classes = num_classes
+
+
+
+class MultipleEnvironmentFashionMNISTTrTe(MultipleDomainDatasetTrainTest):
+    def __init__(self, root, environments, dataset_transform, input_shape,
+                 num_classes):
+        super().__init__()
+        ic(root)
+        if root is None:
+            raise ValueError('Data directory not specified!')
+
+        original_dataset_tr = FashionMNIST(root, train=True, download=True)
+        original_dataset_te = FashionMNIST(root, train=False, download=True)
+
+        original_images_tr = original_dataset_tr.data
+        original_images_te = original_dataset_te.data
+
+        original_labels_tr = original_dataset_tr.targets
+        original_labels_te = original_dataset_te.targets
+
+        generator = torch.manual_seed(SEED)
+        shuffle_tr = torch.randperm(len(original_images_tr))
+
+        original_images_tr = original_images_tr[shuffle_tr]
+        original_labels_tr = original_labels_tr[shuffle_tr]
+
+        generator = torch.manual_seed(SEED)
+        shuffle_te = torch.randperm(len(original_images_te))
+
+        original_images_te = original_images_te[shuffle_te]
+        original_labels_te = original_labels_te[shuffle_te]
+
+
+        self.datasets_tr = []
+        self.datasets_te = []
+        self.environments = environments
+
+
+        for i in range(len(environments)):
+            images_tr = original_images_tr[i::len(environments)]
+            labels_tr = original_labels_tr[i::len(environments)]
+            self.datasets_tr.append(dataset_transform(images_tr, labels_tr, environments[i]))
+
+            images_te = original_images_te[i::len(environments)]
+            labels_te = original_labels_te[i::len(environments)]
+            self.datasets_te.append(dataset_transform(images_te, labels_te, environments[i]))
+
+        # ic(self.datasets)
         self.input_shape = input_shape
         self.num_classes = num_classes
 
@@ -359,11 +532,37 @@ class ColoredFashionMNIST(MultipleEnvironmentFashionMNIST):
         return (a - b).abs()
 
 
+
+
+
 class RotatedFashionMNIST(MultipleEnvironmentFashionMNIST):
     ENVIRONMENTS = ['0', '15', '30', '45', '60', '75']
 
     def __init__(self, root, test_envs, hparams):
         super(RotatedFashionMNIST, self).__init__(root, [0, 15, 30, 45, 60, 75],
+                                           self.rotate_dataset, (1, 28, 28,), 10)
+
+    def rotate_dataset(self, images, labels, angle):
+        rotation = transforms.Compose([
+            transforms.ToPILImage(),
+            transforms.Lambda(lambda x: rotate(x, angle, fill=(0,),
+                interpolation=torchvision.transforms.InterpolationMode.BILINEAR)),
+            transforms.ToTensor()])
+
+        x = torch.zeros(len(images), 1, 28, 28)
+        for i in range(len(images)):
+            x[i] = rotation(images[i])
+
+        y = labels.view(-1)
+
+        return x, y
+
+
+class RotatedFashionMNISTTrTe(MultipleEnvironmentFashionMNISTTrTe):
+    ENVIRONMENTS = ['0', '15', '30', '45', '60', '75']
+
+    def __init__(self, root, test_envs, hparams):
+        super(RotatedFashionMNISTTrTe, self).__init__(root, [0, 15, 30, 45, 60, 75],
                                            self.rotate_dataset, (1, 28, 28,), 10)
 
     def rotate_dataset(self, images, labels, angle):
@@ -387,6 +586,41 @@ class FashionMNISTVariations(MultipleEnvironmentFashionMNIST):
 
     def __init__(self, root, test_envs, hparams):
         super(FashionMNISTVariations, self).__init__(root, self.ENVIRONMENTS,
+                                           self.mnist_variate, (1, 28, 28,), 10)
+
+    def mnist_variate(self, images, labels, task):
+        
+        if task == 'standard':
+            transform=transforms.Compose([
+                # transforms.Normalize((0.1307,), (0.3081,)),
+            ])
+        elif task == 'random':
+            transform=transforms.Compose([
+                # transforms.Normalize((0.1307,), (0.3081,)),
+                AddGaussianNoise(0., 100.)
+            ])         
+        elif task == 'images':
+            transform=transforms.Compose([
+                # transforms.Normalize((0.1307,), (0.3081,)),
+                AddBackgroundImage(std=images.numpy().std())
+            ])    
+        else:
+            raise ValueError('{} is not a valid task'.format(task))
+
+        x = torch.zeros(len(images), 1, 28, 28)
+        for i in range(len(images)):
+            x[i] = transform(images[i])
+
+        y = labels.view(-1)
+
+        return x, y
+
+
+class FashionMNISTVariationsTrTe(MultipleEnvironmentFashionMNISTTrTe):
+    ENVIRONMENTS = ['standard', 'images', 'random']    
+
+    def __init__(self, root, test_envs, hparams):
+        super(FashionMNISTVariationsTrTe, self).__init__(root, self.ENVIRONMENTS,
                                            self.mnist_variate, (1, 28, 28,), 10)
 
     def mnist_variate(self, images, labels, task):
@@ -441,7 +675,7 @@ class MultipleEnvironmentCIFAR10(MultipleDomainDataset):
         original_labels = torch.cat((torch.tensor(original_dataset_tr.targets),
                                      torch.tensor(original_dataset_te.targets)))
 
-        # generator = torch.manual_seed(SEED)
+        generator = torch.manual_seed(SEED)
         shuffle = torch.randperm(len(original_images))
 
         original_images = original_images[shuffle]
